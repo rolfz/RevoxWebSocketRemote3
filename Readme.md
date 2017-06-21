@@ -30,8 +30,8 @@ The web interface is bootstrap based, pictures will follow.
 
 ## Contributors
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+Contact rolfz(at)z-control for any questions regarding this code
 
 ## License
 
-A short snippet describing the license (MIT, Apache, etc.)
+MIT Licence.
