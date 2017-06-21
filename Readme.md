@@ -1,26 +1,32 @@
-## Synopsis
+## Purpose
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+This project aims to control a REVOX B77 Tape recoder from the 70ies over the internet.
+The functionnality will include a copy of the remote switches to be included on a WEB page on a connected device such as PC or smartphone. The interface is made on HTML allowing all web connected devices to control the tape recorder.
+
+The tape position will be recored using 2 hall sensors detecting the main (right) reel. The digital front display may also be used as counter with the same hall detectors. An UART interface between counter and remote controller (ESP8266) is planned.
+
+The hardware interface (PCB see zcontrol.ch) will be plugged in on the Tape controller. The original hardware of the tape recorder remains unchanged. 
+
+The hardware is based on a ESP8266 Wemos D1, an MCP23017 i2c/parallel interface, 4 dual opto-couplers and a switched power supply generating 5V out of the 24V Tape recorder's interface.
+
+An optional digital display will also be available to replace the mechanical counter on the recorders front pannel.
+This display will be similar to arduino mini (layout) including 4 7-segment led display and his own switched power supply.
+
+PROJECT is under developpment !!! June-July 2017
 
 ## Code Example
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-## Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+The code on Git is not yet fully functionnal. It has been uploaded for backup purpose only
+.Libraries uploaded are Adafruit MCP23017 and Arduino WebSockets used in the project.
+!! remote control does not work with the current code !!!
 
 ## Installation
 
-Provide code examples and explanations of how to get the project.
+TBD.
 
-## API Reference
+## API, web interface 
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
+The web interface is bootstrap based, pictures will follow.
 
 ## Contributors
 
