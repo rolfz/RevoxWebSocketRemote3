@@ -27,6 +27,7 @@ More to come.1
 ## API, web interface
 
 The web interface is bootstrap based, pictures will follow.
+![WEB interface](remote.jpg)
 
 ## Contributors
 
