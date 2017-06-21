@@ -32,7 +32,7 @@ The web interface is bootstrap based, will be reviewed for the final version
 
 ## Contributors
 
-Contact rolfz(at)z-control for any questions regarding this code
+Contact rolfz(at)z-control.ch for any questions regarding this code
 
 ## License
 
