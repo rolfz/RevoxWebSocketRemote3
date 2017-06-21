@@ -5,7 +5,7 @@ The functionnality will include a copy of the remote switches to be included on 
 
 The tape position will be recored using 2 hall sensors detecting the main (right) reel. The digital front display may also be used as counter with the same hall detectors. An UART interface between counter and remote controller (ESP8266) is planned.
 
-The hardware interface (PCB see zcontrol.ch) will be plugged in on the Tape controller. The original hardware of the tape recorder remains unchanged. 
+The hardware interface (PCB see zcontrol.ch) will be plugged in on the Tape controller. The original hardware of the tape recorder remains unchanged.
 
 The hardware is based on a ESP8266 Wemos D1, an MCP23017 i2c/parallel interface, 4 dual opto-couplers and a switched power supply generating 5V out of the 24V Tape recorder's interface.
 
@@ -22,9 +22,9 @@ The code on Git is not yet fully functionnal. It has been uploaded for backup pu
 
 ## Installation
 
-TBD.
+More to come.
 
-## API, web interface 
+## API, web interface
 
 The web interface is bootstrap based, pictures will follow.
 
