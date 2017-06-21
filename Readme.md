@@ -22,7 +22,7 @@ The code on Git is not yet fully functionnal. It has been uploaded for backup pu
 
 ## Installation
 
-More to come.
+More to come.1
 
 ## API, web interface
 
