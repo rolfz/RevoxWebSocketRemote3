@@ -22,11 +22,12 @@ The code on Git is not yet fully functionnal. It has been uploaded for backup pu
 
 ## Installation
 
-More to come.1
+Developpment hardware with test connection and switches.
+![Controller board](controller.jpg)
 
 ## API, web interface
 
-The web interface is bootstrap based, pictures will follow.
+The web interface is bootstrap based, will be reviewed for the final version
 ![WEB interface](remote.jpg)
 
 ## Contributors
