@@ -9,6 +9,8 @@
 
 #include "MCP_Code.h"
 
+#include "privateSSID.h"
+
 ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 
 ESP8266WebServer server = ESP8266WebServer(80);       // create a web server on port 80 -99
@@ -141,7 +143,7 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
   Serial.print(ssid);
   Serial.println("\" started\r\n");
 
-  wifiMulti.addAP("BELLAVISTA2", "roxy2000");   // add Wi-Fi networks you want to connect to
+  wifiMulti.addAP(mySSID1,myPASSWORD1);   // add Wi-Fi networks you want to connect to
   wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
   wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
 
