@@ -17,11 +17,6 @@ WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket serv
 
 File fsUploadFile;                                    // a File variable to temporarily store the received file
 
-const char *ssid = "ESP8266_REVOX"; // The name of the Wi-Fi network that will be created
-const char *password = "esp8266";   // The password required to connect to it, leave blank for an open network
-
-const char *OTAName = "ESP8266";           // A name and a password for the OTA service
-const char *OTAPassword = "esp8266";
 
 volatile int mainCnt=0; // Tape counter
 
@@ -80,8 +75,8 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
   Serial.println("\" started\r\n");
 
   wifiMulti.addAP(myssid, mypassword);   // add Wi-Fi networks you want to connect to
-  wifiMulti.addAP("ssid_from_AP_2", "your_password_for_AP_2");
-  wifiMulti.addAP("ssid_from_AP_3", "your_password_for_AP_3");
+  wifiMulti.addAP(ssid2, password2);
+  wifiMulti.addAP(ssid3, password3);
 
   Serial.println("Connecting");
   while (wifiMulti.run() != WL_CONNECTED && WiFi.softAPgetStationNum() < 1) {  // Wait for the Wi-Fi to connect
