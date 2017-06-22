@@ -86,6 +86,59 @@ void intCallBack(){
   awakenByInterrupt=true;
 }
 
+void runPlay(void)
+{
+    // first we avoid to get an other interrupt on Pause which may lock the chip
+      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+    // we delay until we send out the Pause signal. It did not work wihtout it.
+      delay(10);
+      mcp.digitalWrite(REV_PL_OUT, HIGH);
+      delay(100);
+      mcp.digitalWrite(REV_PL_OUT, LOW);
+}
+
+void runStop(void)
+{
+    // first we avoid to get an other interrupt on Pause which may lock the chip
+      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+    // we delay until we send out the Pause signal. It did not work wihtout it.
+      delay(10);
+      mcp.digitalWrite(REV_ST_OUT, HIGH);
+      delay(100);
+      mcp.digitalWrite(REV_ST_OUT, LOW);
+}
+void runRewind(void)
+{
+    // first we avoid to get an other interrupt on Pause which may lock the chip
+      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+    // we delay until we send out the Pause signal. It did not work wihtout it.
+      delay(10);
+      mcp.digitalWrite(REV_RE_OUT, HIGH);
+      delay(100);
+      mcp.digitalWrite(REV_RE_OUT, LOW);
+}
+void runForward(void)
+{
+    // first we avoid to get an other interrupt on Pause which may lock the chip
+      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+    // we delay until we send out the Pause signal. It did not work wihtout it.
+      delay(10);
+      mcp.digitalWrite(REV_FO_OUT, HIGH);
+      delay(100);
+      mcp.digitalWrite(REV_FO_OUT, LOW);
+}
+void runRecord(void)
+{
+    // first we avoid to get an other interrupt on Pause which may lock the chip
+      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+    // we delay until we send out the Pause signal. It did not work wihtout it.
+      delay(10);
+      mcp.digitalWrite(REV_PL_OUT, HIGH);
+      mcp.digitalWrite(REV_RC_OUT, HIGH);
+      delay(100);
+      mcp.digitalWrite(REV_RC_OUT, LOW);
+      mcp.digitalWrite(REV_PL_OUT, LOW);
+}
 void lockPause(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
@@ -119,6 +172,7 @@ void cleanInterrupts(){
 
 
 // this routine is called once an external interrupt occured
+// routine can also be called from the WEB interface without interrupt.
 void handleInterrupt(){
 
   uint8_t pin;
@@ -158,20 +212,23 @@ void handleInterrupt(){
          if(val==1 && pauseLock==1){
                     unlockPause();
                     }
-
+         runStop();
          break;
     case PlayPin:
           if(val==1) play=true; // play and enable the pause function
          Serial.println("Pressed PLAY");
+         runPlay();
          if(val==1 && pauseLock==1){
                     unlockPause();
                     }
+        runPlay();
          break;
     case RewindPin:
          Serial.println("Pressed REWIND");
          if(val==1 && pauseLock==1){
                     unlockPause();
                     }
+         runRewind();
          break;
     case ForwardPin:
          Serial.println("Pressed FOREWARD");
@@ -179,6 +236,7 @@ void handleInterrupt(){
            if(val==1 && pauseLock==1){
                     unlockPause();
                     }
+          runForward();
            break;
     case PausePin:
              Serial.println("Pressed PAUSE");
@@ -187,6 +245,11 @@ void handleInterrupt(){
                 }
          break;
     case REV_PA_IN+REV_RE_IN:
+          Serial.println("Pressed RECORD");
+          if(val==1 && pauseLock==0){
+                lockPause();
+                }
+             runRecord();
          break;
     default:
     break;
