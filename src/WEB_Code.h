@@ -16,6 +16,7 @@ extern WebSocketsServer webSocket;
 extern File fsUploadFile;
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 
+void updateValue( String(id),String (data));
 void updateCounter( String(id),int (data));
 void updateCounters(void);
 

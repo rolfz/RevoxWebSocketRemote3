@@ -10,6 +10,8 @@
 #include "WifiSettings.h"
 #include "MCP_Code.h"
 
+#define DEBUG
+
 ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 
 ESP8266WebServer server = ESP8266WebServer(80);       // create a web server on port 80 -99
@@ -30,6 +32,16 @@ char json[10000];                                   // Buffer pour export du JSO
 
 volatile bool wifiCall = false;
 volatile uint8_t wifiPin = 0;
+
+void updateValue( String(id),String (data)) {
+
+  String json = "{\"id\": \"" + id + "\",";
+         json+= "\"value\": \"" + data + "\"}";
+
+//  Serial.print("JSON : ");  Serial.println(json);
+
+      webSocket.broadcastTXT(json);
+}
 
 void updateCounter( String(id),int (data)) {
 
@@ -176,7 +188,6 @@ void startServer() { // Start a HTTP server with a file read handler and an uplo
   Serial.println("HTTP server started.");
 }
 
-
 /*__________________________________________________________SERVER_HANDLERS__________________________________________________________*/
 
 void handleNotFound() { // if the requested file or page doesn't exist, return a 404 not found error
@@ -186,7 +197,9 @@ void handleNotFound() { // if the requested file or page doesn't exist, return a
 }
 
 bool handleFileRead(String path) { // send the right file to the client (if it exists)
+  #ifdef DEBUG
   Serial.println("handleFileRead: " + path);
+  #endif
   if (path.endsWith("/")) path += "index.html";          // If a folder is requested, send the index file
   String contentType = getContentType(path);             // Get the MIME type
   String pathWithGz = path + ".gz";
@@ -196,7 +209,9 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
     File file = SPIFFS.open(path, "r");                    // Open the file
     size_t sent = server.streamFile(file, contentType);    // Send it to the client
     file.close();                                          // Close the file again
+    #ifdef DEBUG
     Serial.println(String("\tSent file: ") + path);
+    #endif
     return true;
   }
   Serial.println(String("\tFile Not Found: ") + path);   // If the file doesn't exist, return false
@@ -244,33 +259,41 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       }
       break;
     case WStype_TEXT:                     // if new text data is received
+      #ifdef DEBUG
       Serial.printf("[%u] get command: %s\n", num, payload);
+      #endif
       if (payload[0] == '#') {           // We received a key press from the web page
 
         // convert web command into MCP interrupt call.
         switch (payload[1]) {
           case 'P': wifiPin = PausePin;
                     pauseState=PAUSE;
+                    updateValue("status"," PAUSE ");
             break;
           case 'R': wifiPin = RewindPin;
                     revState=REWIND;
                     pauseState=NONE;
+                    updateValue("status","REWIND ");
             break;
           case 'F': wifiPin = ForwardPin;
                     revState=FORWARD;
                     pauseState=NONE;
+                    updateValue("status","FORWARD");
             break;
           case 'L': wifiPin = PlayPin;
                     revState=PLAY;
                     pauseState=NONE;
+                    updateValue("status"," PLAY  ");
             break;
           case 'S': wifiPin = StopPin;
                     revState=STOP;
                     pauseState=NONE;
+                    updateValue("status"," STOP  ");
             break;
           case 'E': wifiPin = RecordPin;
                     revState=RECORD;
                     pauseState=NONE;
+                    updateValue("status","RECORD ");
             break;
           default: wifiPin = NONE;
         }
@@ -313,7 +336,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
               case 'C':   mainCnt=0;
                           storeMainCnt();
+                          #ifdef DEBUG
                           Serial.println("Counter cleared");
+                          #endif
                           break;
                         }
 //        updateCounters();
@@ -352,3 +377,4 @@ String getContentType(String filename) { // determine the filetype of a given fi
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
+

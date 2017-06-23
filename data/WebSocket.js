@@ -29,7 +29,10 @@ var ws;
 	//	console.log('OM: Parsed:');
 	//	console.log(data);
 
-		document.getElementById(data.id).innerHTML = pad(data.count,4);
+		if((data.id)=="status")
+		document.getElementById(data.id).innerHTML =  data.value;
+		else
+		document.getElementById(data.id).innerHTML =  pad(data.count,4);
 	};
 //}
 

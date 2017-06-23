@@ -9,6 +9,7 @@ By Rolf Ziegler
 June 2017
 Version 1.0
 */
+#define DEBUG
 #include <Wire.h>
 #include <Adafruit_MCP23017.h>
 
@@ -86,55 +87,65 @@ void intCallBack(){
   awakenByInterrupt=true;
 }
 
+void displayOutput(){
+  Serial.print("Output is: 0x");
+  Serial.println(mcp.readRegister(MCP23017_GPIOB),HEX);
+}
+
 void runPlay(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
-      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
     // we delay until we send out the Pause signal. It did not work wihtout it.
       delay(10);
       mcp.digitalWrite(REV_PL_OUT, HIGH);
       delay(100);
+      displayOutput();
       mcp.digitalWrite(REV_PL_OUT, LOW);
 }
 
 void runStop(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
-      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
     // we delay until we send out the Pause signal. It did not work wihtout it.
       delay(10);
       mcp.digitalWrite(REV_ST_OUT, HIGH);
       delay(100);
+      displayOutput();
       mcp.digitalWrite(REV_ST_OUT, LOW);
 }
 void runRewind(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
-      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
     // we delay until we send out the Pause signal. It did not work wihtout it.
       delay(10);
       mcp.digitalWrite(REV_RE_OUT, HIGH);
       delay(100);
+      displayOutput();
       mcp.digitalWrite(REV_RE_OUT, LOW);
 }
 void runForward(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
-      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
     // we delay until we send out the Pause signal. It did not work wihtout it.
       delay(10);
       mcp.digitalWrite(REV_FO_OUT, HIGH);
       delay(100);
+      displayOutput();
       mcp.digitalWrite(REV_FO_OUT, LOW);
 }
 void runRecord(void)
 {
     // first we avoid to get an other interrupt on Pause which may lock the chip
-      mcp.writeRegister(MCP23017_GPINTENB,0x1f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
     // we delay until we send out the Pause signal. It did not work wihtout it.
       delay(10);
       mcp.digitalWrite(REV_PL_OUT, HIGH);
       mcp.digitalWrite(REV_RC_OUT, HIGH);
+      displayOutput();
       delay(100);
       mcp.digitalWrite(REV_RC_OUT, LOW);
       mcp.digitalWrite(REV_PL_OUT, LOW);
@@ -147,18 +158,24 @@ void lockPause(void)
       delay(10);
       mcp.digitalWrite(REV_PA_OUT, HIGH);
       delay(10);
+      displayOutput();
       pauseLock=true;
+      #ifdef DEBUG
       Serial.println("Pause locked");
+      #endif
 }
 void unlockPause(void)
 {
       // unlock is easier, we remove the Pause signal
       mcp.digitalWrite(REV_PA_OUT, LOW);
       pauseLock=false;
+      #ifdef DEBUG
       Serial.println("Pause unlocked");
+      #endif
       delay(2);
+      displayOutput();
       // finally we reinitalize the pause interrupt.
-      mcp.writeRegister(MCP23017_GPINTENB,0x2f);  // ALL B pins are able to trigger interrupt
+      mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
 }
 
 
@@ -201,52 +218,69 @@ void handleInterrupt(){
 // let's act on the actions from the interrupt
   switch(pin){
     case RecordPin:
-
-         Serial.println("Pressed REC");
-
+        #ifdef DEBUG
+        Serial.println("Pressed RECORD");
+        #endif
+        if(val==1 && pauseLock==true){
+               unlockPause();
+               }
+         runRecord();
          break;
     case StopPin:
           if(val==1) play=false; // we pressed stop
-
+         #ifdef DEBUG
          Serial.println("Pressed STOP");
-         if(val==1 && pauseLock==1){
+         #endif
+         if(val==1 && pauseLock==true){
                     unlockPause();
                     }
          runStop();
          break;
     case PlayPin:
-          if(val==1) play=true; // play and enable the pause function
+         if(val==1) play=true; // play and enable the pause function
+         #ifdef DEBUG
          Serial.println("Pressed PLAY");
+         #endif
          runPlay();
-         if(val==1 && pauseLock==1){
+         if(val==1 && pauseLock==true){
                     unlockPause();
                     }
         runPlay();
          break;
     case RewindPin:
+         #ifdef DEBUG
          Serial.println("Pressed REWIND");
-         if(val==1 && pauseLock==1){
+         #endif
+         if(val==1 && pauseLock==true){
                     unlockPause();
                     }
          runRewind();
          break;
     case ForwardPin:
+         #ifdef DEBUG
          Serial.println("Pressed FOREWARD");
+         #endif
          // if one of this buttons pressesd, we release Pause
-           if(val==1 && pauseLock==1){
+           if(val==1 && pauseLock==true){
                     unlockPause();
                     }
           runForward();
            break;
     case PausePin:
-             Serial.println("Pressed PAUSE");
-           if(val==1 && pauseLock==0){
+          #ifdef DEBUG
+          Serial.println("Pressed PAUSE");
+          Serial.print("pause: "); Serial.print( val); Serial.print(" ");
+          Serial.println(pauseLock);
+          #endif
+           if(val==1 && pauseLock==false){
                 lockPause();
                 }
          break;
     case REV_PA_IN+REV_RE_IN:
+          #ifdef DEBUG
           Serial.println("Pressed RECORD");
-          if(val==1 && pauseLock==0){
+          #endif
+          if(val==1 && pauseLock==false){
                 lockPause();
                 }
              runRecord();
@@ -258,8 +292,10 @@ void handleInterrupt(){
 
 // release interrupt by reading the 2 ports
    mcp.readRegister(MCP23017_GPIOB);
+   #ifdef DEBUG
    Serial.print("Output is: 0x");
    Serial.println(mcp.readRegister(MCP23017_GPIOB),HEX);
+   #endif
   // and clean queued INT signal
    cleanInterrupts();
    // interrupt service done

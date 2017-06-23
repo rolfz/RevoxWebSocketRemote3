@@ -6,6 +6,7 @@
 #include "MCP_Code.h"
 #include "MemoryCode.h"
 #include "WEB_CODE.h"
+#include "EncoderCode.h"
 
 //#include "WifiSettings.h"
 
@@ -41,6 +42,11 @@ void setup() {
 
   startEEPROM();
 
+  startEncoder();
+
+  updateCounter("maincnt",0);
+  updateCounters();
+
 }
 
 /*__________________________________________________________LOOP__________________________________________________________*/
@@ -62,9 +68,9 @@ void loop() {
     toggle = !toggle;
     digitalWrite(LED2_PIN, toggle);
     if(mainCnt++ > 9999)mainCnt=0;
-         updateCounter("maincnt",mainCnt); // << we send the counter value here
+      updateCounter("maincnt",mainCnt); // << we send the counter value here
      //Serial.print("cnt= ");
-     //Serial.println(mainCnt);
+     // send counter to display board optional
+     Serial.println(mainCnt);
   }
-
 }

@@ -8,4 +8,8 @@
    "density": "3.0"
   }
  ]
+ {
+ "display":"standalone",
+	"orientation":"landscape"
+	}
 }
