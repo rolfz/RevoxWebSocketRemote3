@@ -74,4 +74,14 @@ void loop() {
      //Serial.println(mainCnt);
   }
 
+  if (Serial.available() > 0) {   // something came across serial
+
+              char incomingByte = Serial.read();
+
+              if (incomingByte == 'R'){
+                  mainCnt=0;
+                  }
+                }
+
+
 }

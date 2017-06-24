@@ -10,7 +10,7 @@
 #include "WifiSettings.h"
 #include "MCP_Code.h"
 
-#define DEBUG
+//#define DEBUG
 
 ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 
@@ -377,4 +377,3 @@ String getContentType(String filename) { // determine the filetype of a given fi
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
-

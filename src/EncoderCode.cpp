@@ -40,7 +40,8 @@ void doEncoderA(void){
         mainCnt=9999;
 //        Serial.println("O");
       }
-      Serial.println(mainCnt);
+      Serial.print(mainCnt);
+      Serial.print("\n");
     }
   }
 
@@ -64,7 +65,8 @@ void doEncoderB(void){
         mainCnt=0;
   //      Serial.println("U");
       }
-      Serial.println(mainCnt);
+      Serial.print(mainCnt);
+      Serial.print("\n");
     }
   }
 
