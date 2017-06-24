@@ -1,8 +1,16 @@
 /*
+    Revox B77 memory code
+    Stores values of 3-5 segments of tape to be played
 
+    By Rolf Ziegler
+    June 2017
 
+    Input: functions called from the web interface to store and play the segments
+    Output: functions called from the web interface to goto or play segments of recorded material
 
 */
+//#define DEBUG
+
 #include "MemoryCode.h"
 
 volatile int cntS[5]={0,0,0,0,0};
@@ -11,9 +19,9 @@ volatile int cntE[5]={0,0,0,0,0};
 void startEEPROM(void){
 
     EEPROM.begin(512);
-    
+
     dumpMemory();
-    
+
     restorePositions();
 }
 
@@ -35,10 +43,12 @@ void storePosition(uint8 * index){
 
     EEPROM.commit();
 
+    #ifdef DEBUG
     Serial.print("Stored position ");
     Serial.print(loc);
     Serial.print("= ");
     Serial.print(cnt);
+    #endif
 
     int tmp = EEPROM.read(loc);
     tmp +=EEPROM.read(loc+1)<<8;

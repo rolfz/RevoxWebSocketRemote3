@@ -5,7 +5,7 @@
 */
 #include "EncoderCode.h"
 
-volatile int counter = 0;
+//volatile int counter = 0;
 
 boolean A_set;
 boolean B_set;
@@ -13,14 +13,14 @@ boolean B_set;
 #define encoder0PinA HALL_SENS
 #define encoder0PinB HALL_DIR
 
-void startEncode(void){
+void startEncoder(void){
 
   pinMode(encoder0PinA,INPUT);
   pinMode(encoder0PinB,INPUT);
 
 // encoder pin on interrupt 0 (pin 2)
   attachInterrupt(encoder0PinA, doEncoderA, CHANGE);
-  
+
 // encoder pin on interrupt 1 (pin 3)
   attachInterrupt(encoder0PinB, doEncoderB, CHANGE);
 
@@ -29,18 +29,18 @@ void startEncode(void){
 }
 
  // Interrupt on A changing state
-void doEncoderA(){
+void doEncoderA(void){
     digitalWrite(LED1_PIN,LOW);
   // Low to High transition?
   if (digitalRead(encoder0PinA) == HIGH) {
     A_set = true;
     if (!B_set) {
-      counter++;
-      if(counter>9999){
-        counter=0;
-        Serial.println("O");
+      mainCnt--;
+      if(mainCnt<0){
+        mainCnt=9999;
+//        Serial.println("O");
       }
-      Serial.println(counter);
+      Serial.println(mainCnt);
     }
   }
 
@@ -51,20 +51,20 @@ void doEncoderA(){
 
 }
 
- 
+
 // Interrupt on B changing state
-void doEncoderB(){
+void doEncoderB(void){
   digitalWrite(LED1_PIN,HIGH);
   // Low-to-high transition?
   if (digitalRead(encoder0PinB) == HIGH) {
     B_set = true;
     if (!A_set) {
-      counter--;
-      if(counter<0){
-        counter=9999;
-        Serial.println("U");
+      mainCnt++;
+      if(mainCnt>9999){
+        mainCnt=0;
+  //      Serial.println("U");
       }
-      Serial.println(counter);
+      Serial.println(mainCnt);
     }
   }
 

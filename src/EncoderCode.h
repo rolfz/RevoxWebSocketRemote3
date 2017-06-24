@@ -5,9 +5,10 @@
 #include "MCP_Code.h"
 
 // prototypes
-void doEncoderB();
-void doEncoderA();
+void doEncoderB(void);
+void doEncoderA(void);
 void startEncoder(void);
 
+extern volatile int mainCnt; // Tape counter
 
 #endif

@@ -9,7 +9,7 @@ By Rolf Ziegler
 June 2017
 Version 1.0
 */
-#define DEBUG
+//#define DEBUG // enable printout debug info
 #include <Wire.h>
 #include <Adafruit_MCP23017.h>
 
@@ -88,8 +88,10 @@ void intCallBack(){
 }
 
 void displayOutput(){
+  #ifdef DEBUG
   Serial.print("Output is: 0x");
   Serial.println(mcp.readRegister(MCP23017_GPIOB),HEX);
+  #endif
 }
 
 void runPlay(void)
@@ -285,6 +287,14 @@ void handleInterrupt(){
                 }
              runRecord();
          break;
+// encoder code
+/*
+    case EncDir:
+    break;
+    case EncSens:
+    break;
+*/
+
     default:
     break;
     val=0;

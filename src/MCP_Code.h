@@ -52,6 +52,8 @@ byte const REV_SENS_IN=15;
 #define ForwardPin 11
 #define RewindPin 12
 #define PausePin 13
+#define EncDir 14
+#define EncSens 15
 #define NONE 0
 
 // prototypes
