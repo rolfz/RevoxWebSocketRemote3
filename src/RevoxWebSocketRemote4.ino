@@ -1,3 +1,17 @@
+/*
+  RevoxWebSocketRemote   Wifi Controller for REVOXB77 Tape recorder
+
+  - Scans changes on Revox Remote Controller plug (inside recorder)
+  - Generates a web page with Remote control buttons
+  - Allows to store 3 samples on tape to be played indivisually
+  - Clear button
+  - Tape counter with hall detector/encoder
+  - UART data to display counter on front display
+  - 
+
+  By Rolf Ziegler
+  June 2017
+*/
 #include <Arduino.h>
 
 #include <EEPROM.h>

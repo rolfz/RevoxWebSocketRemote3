@@ -1,7 +1,9 @@
-	  
-	  
+/*
+	javascript code for Revox77 wifi controller
+	By Rolf Ziegler
+	June 2017
+*/
 var ws;
-
 //function start(){
 //	console.log('HTML Start');
 	ws = new WebSocket('ws://'+location.hostname+':81/');
@@ -20,15 +22,11 @@ var ws;
 		console.log('OE: WebSocket Error ', err);
 	};
 
-	ws.onmessage = function (evt) {  
-
+	ws.onmessage = function (evt) {
 	//	console.log('OM: Received from Server: ', evt);
-	
 		var data = JSON.parse(evt.data);
-		
 	//	console.log('OM: Parsed:');
 	//	console.log(data);
-
 		if((data.id)=="status")
 		document.getElementById(data.id).innerHTML =  data.value;
 		else
@@ -37,10 +35,8 @@ var ws;
 //}
 
 function sendButton(obj){
-
 		 ws.send(obj);
 		 console.log(obj);
-		 
 };
 
 function pad(num, size) {
@@ -52,7 +48,7 @@ function updateCounter(){
 $.getJSON('/update2.json', function(data){
 
   $('#maincnt').html(pad(data.cMa,4));
- 
+
   }).fail(function(err){
   console.log("err getJSON mesures.json "+JSON.stringify(err));
 });
@@ -71,7 +67,7 @@ $.getJSON('/update.json', function(data){
   $('#pE4').html(pad(data.c4e,4));
   $('#pS5').html(pad(data.c5s,4));
   $('#pE5').html(pad(data.c5e,4));
- 
+
   }).fail(function(err){
   console.log("err getJSON mesures.json "+JSON.stringify(err));
 });
