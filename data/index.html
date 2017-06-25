@@ -3,11 +3,17 @@
 <head>
   <title>Revox Wifi Remote</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!--meta name="viewport" content="width=device-width, initial-scale=1"-->
+  
+  <meta name="viewport" content="user-scalable=no, width=device-width" />
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"-->
   
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <!--script type="text/javascript" src="scripts/iphone.js"></script-->
+  
   <!--script src="js/bootstrap-table.min.js3333"></script-->
   <script src="WebSocket.js" type="text/javascript"></script>
 </head>
@@ -20,16 +26,19 @@
     @media only screen and (orientation:landscape){
         #warning-message { display:none; }
     }
+  body { background: #202020;
+		color:white; 
+		}
 </style>
 <body>
-
+<center>
 <!--body onload="javascript:start();"-->
-	<div class="container-fluid" id="wrapper">
+	<div class="container-fluid" id="wrapper";>
 	<h2> <span>REVOX B77 WIFI REMOTE  </span></h2>
     <h3><button type="button" id="$CL" class="btn btn-primary" onclick="sendButton(this.id)">CLEAR</button>
     <span class="label label-default" id="maincnt">COUNTER</span>
-    <button type="button" id="$ZZ" class="btn btn-primary" onclick="sendButton(this.id)">GOTO ZERO</button>
-	<span class="label label-info" id="status">STOP</span></h3>
+	<span class="label label-default" style="display; width:400px;" id="status">STOP</span>
+    <button type="button" id="$ZZ" class="btn btn-primary" onclick="sendButton(this.id)">GOTO ZERO</button></h3>
 	<br>
   	<!--ul class="nav nav-tabs" id=tab>an>
     	<li class="active"><a data-toggle="tab" href="#remote">Control</a></li>
@@ -40,15 +49,15 @@
 	<!-- HERE STARTS THE COMMAND MENU -->
     <div id="remote" class="tab-pane fade in active">
       <p> 
-		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">PAUSE</button>		   
+		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)"> PAUSE </button>		   
 		   
 		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">REWIND</button>
 		   
 		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">FORWARD</button>
 
-		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">PLAY</button>
+		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)"> PLAY </button>
 		   
-		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">STOP</button>
+		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)"> STOP </button>
 		   
 		  <button type="button" id="#E" class="btn btn-warning" onclick="sendButton(this.id)">RECORD</button>
 		  
@@ -76,7 +85,7 @@
 		 <button type="button" id="$P2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">PLAY</button>
 		 </h3>
 	   </p> 
-		<p>
+		<!--p>
 		 <h3>M3 <button type="button" id="$S3" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">START</button>
 		 <span id="pS3" class="label label-default">Ct3s</span>
 		 <button type="button" id="$G3" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
@@ -85,7 +94,7 @@
 		 <button type="button" id="$O3" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
 		 <button type="button" id="$P3" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">PLAY</button>
 		 </h3>
-	   </p>  
+	   </p-->  
 	   <!--p>
 	    <h4>M4 <button type="button" id="ST4" class="btn btn-primary btn-sm">START</button>
 		 <span id="p4s" class="label label-default">Coutner4s</span>
@@ -149,5 +158,6 @@
 	</h3>
 	</center></h2>
 	</div>
+	</center>
   </body>
 </html>

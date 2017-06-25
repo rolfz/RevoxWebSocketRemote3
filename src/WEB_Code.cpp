@@ -1,8 +1,8 @@
 /*
   WEB code for RevoxB77 wifi remote controller
 
-
-
+  By Rolf Ziegler
+  June 2017
 
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 #include "WEB_Code.h"
@@ -56,7 +56,7 @@ void updateCounter( String(id),int (data)) {
 // initial counter update
 void updateCounters() {
 
-  String json = "{\"c1s\": \"" + String(cntS[1]) + "\",";   // pack all other memory values
+ String json = "{\"c1s\": \"" + String(cntS[1]) + "\",";   // pack all other memory values
         json += "\"c1e\": \"" + String(cntE[1]) + "\",";
         json += "\"c2s\": \"" + String(cntS[2]) + "\",";
         json += "\"c2e\": \"" + String(cntE[2]) + "\",";
@@ -268,12 +268,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         switch (payload[1]) {
           case 'P': wifiPin = PausePin;
                     pauseState=PAUSE;
-                    updateValue("status"," PAUSE ");
+                    updateValue("status","PAUSE");
             break;
           case 'R': wifiPin = RewindPin;
                     revState=REWIND;
                     pauseState=NONE;
-                    updateValue("status","REWIND ");
+                    updateValue("status","REWIND");
             break;
           case 'F': wifiPin = ForwardPin;
                     revState=FORWARD;
@@ -283,17 +283,17 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           case 'L': wifiPin = PlayPin;
                     revState=PLAY;
                     pauseState=NONE;
-                    updateValue("status"," PLAY  ");
+                    updateValue("status","PLAY");
             break;
           case 'S': wifiPin = StopPin;
                     revState=STOP;
                     pauseState=NONE;
-                    updateValue("status"," STOP  ");
+                    updateValue("status","STOP");
             break;
           case 'E': wifiPin = RecordPin;
                     revState=RECORD;
                     pauseState=NONE;
-                    updateValue("status","RECORD ");
+                    updateValue("status","RECORD");
             break;
           default: wifiPin = NONE;
         }

@@ -1,6 +1,8 @@
 /*
+Encoder code for mesuring turns on Revox B77 tape recorder
 
-
+By Rolf Ziegler
+June 2017
 
 */
 #include "EncoderCode.h"
@@ -35,9 +37,9 @@ void doEncoderA(void){
   if (digitalRead(encoder0PinA) == HIGH) {
     A_set = true;
     if (!B_set) {
-      mainCnt--;
-      if(mainCnt<0){
-        mainCnt=9999;
+      mainCnt++;
+      if(mainCnt>9999){
+        mainCnt=0;
 //        Serial.println("O");
       }
       Serial.print(mainCnt);
@@ -60,9 +62,9 @@ void doEncoderB(void){
   if (digitalRead(encoder0PinB) == HIGH) {
     B_set = true;
     if (!A_set) {
-      mainCnt++;
-      if(mainCnt>9999){
-        mainCnt=0;
+      mainCnt--;
+      if(mainCnt<0){
+        mainCnt=9999;
   //      Serial.println("U");
       }
       Serial.print(mainCnt);

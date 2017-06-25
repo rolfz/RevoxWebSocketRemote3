@@ -7,7 +7,7 @@
   - Clear button
   - Tape counter with hall detector/encoder
   - UART data to display counter on front display
-  - 
+  -
 
   By Rolf Ziegler
   June 2017
@@ -24,6 +24,8 @@
 
 //#include "WifiSettings.h"
 volatile int integerValue=0;
+int const SHUT_DOWN_PIN=14;
+int const SHUT_DOWN_THESHOLD=1;
 
 /*__________________________________________________________SETUP__________________________________________________________*/
 
@@ -33,11 +35,12 @@ void setup() {
   delay(10);
   Serial.println("\r\n");
 
-  Serial.println("Revox Wifi Remote V0.9 beta 15.6.2017");
+  Serial.println("Revox Wifi Remote V0.94 beta 22.6.2017");
 //  Serial.println(__FILE__);
   Serial.println("Compiled: " __DATE__ " " __TIME__);
   Serial.println("File:     RevoxWebSocketRemote.ino\n");
 
+  pinMode(SHUT_DOWN_PIN,INPUT);
 
   mainCnt = 0;
 
@@ -59,8 +62,9 @@ void setup() {
 
   startEncoder();             // encoder handled by ESP
 
-  updateCounter("maincnt",0);
-  updateCounters();
+  updateCounters();           // restore the tape positions (autoplay)
+
+  restoreCounters();           // restore counter position from last shut-down
 
 }
 
@@ -86,7 +90,24 @@ void loop() {
       updateCounter("maincnt",mainCnt); // << we send the counter value here
      //Serial.print("!");
      //Serial.println(mainCnt);
-  }
+
+     // test if Revox main power was turned off -> save main counter position
+     int pwrLevel=digitalRead(SHUT_DOWN_PIN);
+
+     #ifdef DEBUG
+     Serial.print("Revox Power =");
+     Serial.println(pwrLevel);
+     #endif
+
+         if(pwrLevel < SHUT_DOWN_THESHOLD){
+            storeMainCnt();
+            Serial.println("STORE MAIN COUNTER");
+            while(1);
+         }
+
+      } // end blink and shut-down test
+
+  // check if commands where received from front panel display
 
   if (Serial.available() > 0) {   // something came across serial
 
@@ -94,8 +115,8 @@ void loop() {
 
               if (incomingByte == 'R'){
                   mainCnt=0;
+                  updateCounter("maincnt",mainCnt);
                   }
                 }
 
-
-}
+}// end main loop

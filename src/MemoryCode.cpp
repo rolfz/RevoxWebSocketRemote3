@@ -1,4 +1,4 @@
-/*
+F/*
     Revox B77 memory code
     Stores values of 3-5 segments of tape to be played
 
@@ -16,15 +16,15 @@
 volatile int cntS[5]={0,0,0,0,0};
 volatile int cntE[5]={0,0,0,0,0};
 
+// initalize eeprom function
 void startEEPROM(void){
 
     EEPROM.begin(512);
 
     dumpMemory();
-
-    restorePositions();
 }
 
+// store one position of the autoplay locations
 void storePosition(uint8 * index){
 
   int cnt=mainCnt; // we store not to loose the exact position
@@ -60,6 +60,7 @@ void storePosition(uint8 * index){
     #endif
     }
 
+//
 void storeMainCnt(void){
     int cnt=mainCnt;
     EEPROM.write(0, cnt & 0xff);
@@ -70,7 +71,7 @@ void storeMainCnt(void){
     EEPROM.commit();
 }
 
-void restorePositions(){
+void restoreCounters(){
 
     // restore counter
     mainCnt = EEPROM.read(0);
