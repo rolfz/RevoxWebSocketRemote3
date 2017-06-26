@@ -12,8 +12,6 @@ void startEEPROM(void);
 void storePosition(uint8 * index);
 void storeMainCnt(void);
 void restoreCounters();
-void gotoPosition(uint8 * index);
-void playMemory(uint8 loc);
 void dumpMemory(void);
 
 #endif

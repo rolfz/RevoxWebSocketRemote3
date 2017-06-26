@@ -9,6 +9,7 @@
 #include "MemoryCode.h"
 #include "WifiSettings.h"
 #include "MCP_Code.h"
+#include "autoplay.h"
 
 //#define DEBUG
 
@@ -324,16 +325,20 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         str[0]='p';
 
         switch(payload[1]) {
+              // store start and end position
               case 'S': case 'E': storePosition(payload);
                                 updateCounter(str,mainCnt);
                                break;
+              // goto start position
               case 'G':   gotoPosition(payload);
                           break;
+              // goto end position
               case 'O':   gotoPosition(payload);
                           break;
+              // play memory location
               case 'P':   playMemory(payload[2]);
                           break;
-
+              // clear mainCnt
               case 'C':   mainCnt=0;
                           storeMainCnt();
                           #ifdef DEBUG

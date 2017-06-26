@@ -70,5 +70,9 @@ void lockPause(void);
 void unlockPause(void);
 void cleanInterrupts();
 void handleInterrupt();
+void runPlay(void);
+void runStop(void);
+void runForward(void);
+void runRewind(void);
 
 #endif

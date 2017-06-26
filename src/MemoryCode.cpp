@@ -1,4 +1,4 @@
-F/*
+/*
     Revox B77 memory code
     Stores values of 3-5 segments of tape to be played
 
@@ -106,24 +106,6 @@ void restoreCounters(){
     #endif
     }
 }
-
-void gotoPosition(uint8 * index){
-
-  int loc=index[2]-'0';
-
-  int gotoPos=EEPROM.read(loc);
-      gotoPos+=EEPROM.read(loc+1)<<8;
-  // add code to goto here
-  }
-
-void playMemory(uint8 loc){
-
-  int startPos=EEPROM.read(loc);
-      startPos+=EEPROM.read(loc+1)<<8;
-
-  int endPos=EEPROM.read(loc+8);
-      endPos+=EEPROM.read(loc+9)<<8;
-  }
 
   void dumpMemory(void){
     for(int i=0;i<26;i++){

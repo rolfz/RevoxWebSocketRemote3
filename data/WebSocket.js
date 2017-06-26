@@ -35,8 +35,16 @@ var ws;
 //}
 
 function sendButton(obj){
-		 ws.send(obj);
-		 console.log(obj);
+	     if(obj=="$CL" ){
+			 if(confirm("Are you sure!")){
+			ws.send(obj);
+			console.log(obj);
+			}}
+		 else
+		 {
+		ws.send(obj);
+		console.log(obj);
+		 } 
 };
 
 function pad(num, size) {

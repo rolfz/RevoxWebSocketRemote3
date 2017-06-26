@@ -62,10 +62,11 @@ void setup() {
 
   startEncoder();             // encoder handled by ESP
 
-  updateCounters();           // restore the tape positions (autoplay)
-
   restoreCounters();           // restore counter position from last shut-down
 
+  updateCounters();           // restore the tape positions (autoplay)
+
+  updateCounter("maincnt",mainCnt); // << we send the counter value here
 }
 
 /*__________________________________________________________LOOP__________________________________________________________*/
@@ -100,9 +101,9 @@ void loop() {
      #endif
 
          if(pwrLevel < SHUT_DOWN_THESHOLD){
-            storeMainCnt();
+            storeMainCnt(); // store in eeprom
             Serial.println("STORE MAIN COUNTER");
-            while(1);
+            
          }
 
       } // end blink and shut-down test
