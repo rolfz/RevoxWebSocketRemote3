@@ -4,22 +4,23 @@
 	June 2017
 */
 var ws;
-//function start(){
+
 //	console.log('HTML Start');
 	ws = new WebSocket('ws://'+location.hostname+':81/');
 
-	ws.onopen = function (evt) {
-		console.log('OO: WebSocket open');
+	ws.onopen = function(evt){
+		console.log('OO, WebSocket open');
 		ws.send('Connect ' + new Date());
 		updateCounters();
+		initDisplay();
 	};
 
 	ws.onclose = function(evt){
-		console.log('OC: WebSocket connection closed');
+		console.log('OC= WebSocket connection closed');
 	};
 
 	ws.onerror = function (err) {
-		console.log('OE: WebSocket Error ', err);
+		console.log('OE= WebSocket Error ', err);
 	};
 
 	ws.onmessage = function (evt) {
@@ -32,7 +33,18 @@ var ws;
 		else
 		document.getElementById(data.id).innerHTML =  pad(data.count,4);
 	};
-//}
+
+
+ function initDisplay(){
+  // When ready...
+      window.addEventListener("load",function() {
+      	// Set a timeout...
+      	setTimeout(function(){
+      		// Hide the address bar!
+      		window.scrollTo(0, 1);
+      	}, 0);
+  });
+};
 
 function sendButton(obj){
 	     if(obj=="$CL" ){
@@ -44,7 +56,7 @@ function sendButton(obj){
 		 {
 		ws.send(obj);
 		console.log(obj);
-		 } 
+		 }
 };
 
 function pad(num, size) {
