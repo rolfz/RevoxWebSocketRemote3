@@ -5,10 +5,16 @@
 #include <EEPROM.h>
 
 extern volatile int mainCnt; // Tape counter
+extern volatile int task;
 extern volatile int cntS[5];
 extern volatile int cntE[5];
+extern volatile int gotoPos;
+extern volatile int startPos;
+extern volatile int endPos;
 
 void gotoPosition(uint8 * index);
 void playMemory(uint8 loc);
+
+void autoPlay(int state);
 
 #endif

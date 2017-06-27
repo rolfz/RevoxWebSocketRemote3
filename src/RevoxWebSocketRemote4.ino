@@ -21,6 +21,7 @@
 #include "MemoryCode.h"
 #include "WEB_CODE.h"
 #include "EncoderCode.h"
+#include "autoplay.h"
 
 //#include "WifiSettings.h"
 volatile int integerValue=0;
@@ -103,7 +104,7 @@ void loop() {
          if(pwrLevel < SHUT_DOWN_THESHOLD){
             storeMainCnt(); // store in eeprom
             Serial.println("STORE MAIN COUNTER");
-            
+
          }
 
       } // end blink and shut-down test
@@ -119,5 +120,7 @@ void loop() {
                   updateCounter("maincnt",mainCnt);
                   }
                 }
+
+   autoPlay(task);
 
 }// end main loop
