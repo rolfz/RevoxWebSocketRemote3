@@ -12,8 +12,8 @@ Version 1.0
 //#define DEBUG // enable printout debug info
 #include <Wire.h>
 #include <Adafruit_MCP23017.h>
-
 #include "MCP_Code.h"
+#include "WEB_Code.h"
 
 Adafruit_MCP23017 mcp;
 
@@ -70,7 +70,7 @@ void startMCP(void){
   //mcp.writeRegister(MCP23017_DEFVALB,0x00); // Default value is zero
   //mcp.writeRegister(MCP23017_INTCONB,0xff); // All inputs are compared to default value
   mcp.writeRegister(MCP23017_INTCONB,0x00); // interrupt on change of a pin
-  mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // ALL B pins are able to trigger interrupt
+  mcp.writeRegister(MCP23017_GPINTENB,0x3f);  // pin0-5 on port B are able to trigger interrupt
   //mcp.setupInterruptPin(REV_PA_IN,RISING);
 //  mcp.setupInterruptPin(REV_RE_IN,RISING);
 
@@ -92,6 +92,10 @@ void displayOutput(){
   Serial.print("Output is: 0x");
   Serial.println(mcp.readRegister(MCP23017_GPIOB),HEX);
   #endif
+}
+// routine returns 1 when tape is moving
+bool tapeMove(void){
+  return(mcp.digitalRead( REV_MO_IN));
 }
 
 void runPlay(void)
@@ -227,6 +231,7 @@ void handleInterrupt(){
                unlockPause();
                }
          runRecord();
+         updateValue("status","RECORD");
          break;
     case StopPin:
           if(val==1) play=false; // we pressed stop
@@ -237,18 +242,20 @@ void handleInterrupt(){
                     unlockPause();
                     }
          runStop();
+         updateValue("status","STOP");
          break;
     case PlayPin:
          if(val==1) play=true; // play and enable the pause function
          #ifdef DEBUG
          Serial.println("Pressed PLAY");
          #endif
-         runPlay();
          if(val==1 && pauseLock==true){
                     unlockPause();
                     }
-        runPlay();
+         runPlay();
+         updateValue("status","PLAY");
          break;
+
     case RewindPin:
          #ifdef DEBUG
          Serial.println("Pressed REWIND");
@@ -257,6 +264,7 @@ void handleInterrupt(){
                     unlockPause();
                     }
          runRewind();
+         updateValue("status","REWIND");
          break;
     case ForwardPin:
          #ifdef DEBUG
@@ -267,7 +275,8 @@ void handleInterrupt(){
                     unlockPause();
                     }
           runForward();
-           break;
+          updateValue("status","FORWARD");
+          break;
     case PausePin:
           #ifdef DEBUG
           Serial.println("Pressed PAUSE");
@@ -277,8 +286,10 @@ void handleInterrupt(){
            if(val==1 && pauseLock==false){
                 lockPause();
                 }
+         updateValue("status","PAUSE");
          break;
-    case REV_PA_IN+REV_RE_IN:
+/* not sure we need this
+      case REV_PA_IN+REV_RE_IN:
           #ifdef DEBUG
           Serial.println("Pressed RECORD");
           #endif
@@ -287,6 +298,8 @@ void handleInterrupt(){
                 }
              runRecord();
          break;
+*/
+
 // encoder code
 /*
     case EncDir:

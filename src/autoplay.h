@@ -13,8 +13,8 @@ extern volatile int startPos;
 extern volatile int endPos;
 
 void gotoPosition(uint8 * index);
-void playMemory(uint8 loc);
-
+void playMemory(uint8 * index);
+void gotoZero(void);
 void autoPlay(int state);
 
 #endif

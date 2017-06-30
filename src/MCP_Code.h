@@ -43,8 +43,8 @@ byte const REV_PL_IN=10;
 byte const REV_FO_IN=11;
 byte const REV_RE_IN=12;
 byte const REV_PA_IN=13; // for testing
-byte const REV_DIR_IN=14;
-byte const REV_SENS_IN=15;
+byte const REV_MO_IN=14; // move input (added July 1st 2017 to aviond delay in code)
+//byte const REV_SENS_IN=15;
 
 #define RecordPin 8
 #define StopPin 9
@@ -52,8 +52,8 @@ byte const REV_SENS_IN=15;
 #define ForwardPin 11
 #define RewindPin 12
 #define PausePin 13
-#define EncDir 14
-#define EncSens 15
+//#define EncDir 14
+//#define EncSens 15
 #define NONE 0
 
 // prototypes
@@ -74,5 +74,6 @@ void runPlay(void);
 void runStop(void);
 void runForward(void);
 void runRewind(void);
+bool tapeMove(void);
 
 #endif

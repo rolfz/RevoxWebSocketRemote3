@@ -27,7 +27,19 @@
 volatile int integerValue=0;
 int const SHUT_DOWN_PIN=14;
 int const SHUT_DOWN_THESHOLD=1;
+volatile int lastMainCnt=0;
 
+void displayCounter(void){
+  // update counter on display,
+  if(mainCnt!=lastMainCnt){
+      int tmpCnt=mainCnt;
+      if(mainCnt<0)tmpCnt=10000+mainCnt;
+      Serial.print(tmpCnt);
+      Serial.print("\n");
+      updateCounter("maincnt",tmpCnt); // << we send the counter value here
+      lastMainCnt=mainCnt;
+  }
+}
 /*__________________________________________________________SETUP__________________________________________________________*/
 
 void setup() {
@@ -67,13 +79,14 @@ void setup() {
 
   updateCounters();           // restore the tape positions (autoplay)
 
-  updateCounter("maincnt",mainCnt); // << we send the counter value here
+  displayCounter();
 }
 
 /*__________________________________________________________LOOP__________________________________________________________*/
 
 void loop() {
   static long blink = 0;
+  static int fast = 0;
   static bool toggle = false;
 
   webSocket.loop();                           // constantly check for websocket events
@@ -84,15 +97,13 @@ void loop() {
   // everything is done in the interrupt handling routine.
   if (awakenByInterrupt) handleInterrupt();
 
-  if (blink++ >= 6000) {
+  if (blink++ >= 3000) {
     blink = 0;
     toggle = !toggle;
     digitalWrite(LED2_PIN, toggle);
   //  if(mainCnt++ > 9999)mainCnt=0;
-      updateCounter("maincnt",mainCnt); // << we send the counter value here
      //Serial.print("!");
      //Serial.println(mainCnt);
-
      // test if Revox main power was turned off -> save main counter position
      int pwrLevel=digitalRead(SHUT_DOWN_PIN);
 
@@ -122,5 +133,6 @@ void loop() {
                 }
 
    autoPlay(task);
+   displayCounter();
 
 }// end main loop

@@ -20,9 +20,6 @@ WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket serv
 
 File fsUploadFile;                                    // a File variable to temporarily store the received file
 
-
-volatile int mainCnt=0; // Tape counter
-
 enum  revstat {STOP,PLAY,FORWARD,REWIND,RECORD,PAUSE,NOPAUSE};
 char  revState=STOP;
 char pauseState=NOPAUSE;
@@ -256,7 +253,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       break;
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        updateCounter("maincnt",mainCnt); // << we send the counter value here
       }
       break;
     case WStype_TEXT:                     // if new text data is received
@@ -269,6 +267,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         switch (payload[1]) {
           case 'P': wifiPin = PausePin;
                     pauseState=PAUSE;
+                    // update value will display the last command on the top line of the web page (grey)
                     updateValue("status","PAUSE");
             break;
           case 'R': wifiPin = RewindPin;
@@ -290,6 +289,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
                     revState=STOP;
                     pauseState=NONE;
                     updateValue("status","STOP");
+                    task=STOP;
             break;
           case 'E': wifiPin = RecordPin;
                     revState=RECORD;
@@ -336,7 +336,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
               case 'O':   gotoPosition(payload);
                           break;
               // play memory location
-              case 'P':   playMemory(payload[2]);
+              case 'P':   playMemory(payload);
                           break;
               // clear mainCnt
               case 'C':   mainCnt=0;
@@ -344,8 +344,14 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
                           #ifdef DEBUG
                           Serial.println("Counter cleared");
                           #endif
+                          updateCounter(str,mainCnt);
+                          break;
+              case 'Z':
+                          gotoZero();
                           break;
                         }
+
+          payload[0]='X';
 //        updateCounters();
       }
       break;

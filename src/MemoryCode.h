@@ -3,8 +3,8 @@
 
 #include <Arduino.h>
 #include <EEPROM.h>
+#include "EncoderCode.h"
 
-extern volatile int mainCnt; // Tape counter
 extern volatile int cntS[5];
 extern volatile int cntE[5];
 

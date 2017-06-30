@@ -15,6 +15,8 @@ boolean B_set;
 #define encoder0PinA HALL_SENS
 #define encoder0PinB HALL_DIR
 
+volatile int mainCnt=0; // Tape counter
+
 void startEncoder(void){
 
   pinMode(encoder0PinA,INPUT);
@@ -37,21 +39,13 @@ void doEncoderA(void){
   if (digitalRead(encoder0PinA) == HIGH) {
     A_set = true;
     if (!B_set) {
-      mainCnt++;
-      if(mainCnt>9999){
-        mainCnt=0;
-//        Serial.println("O");
-      }
-      Serial.print(mainCnt);
-      Serial.print("\n");
+          mainCnt++;
     }
   }
-
   // High-to-low transition?
   if (digitalRead(encoder0PinA) == LOW) {
     A_set = false;
   }
-
 }
 
 
@@ -63,12 +57,6 @@ void doEncoderB(void){
     B_set = true;
     if (!A_set) {
       mainCnt--;
-      if(mainCnt<0){
-        mainCnt=9999;
-  //      Serial.println("U");
-      }
-      Serial.print(mainCnt);
-      Serial.print("\n");
     }
   }
 

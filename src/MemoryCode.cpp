@@ -21,7 +21,7 @@ void startEEPROM(void){
 
     EEPROM.begin(512);
 
-    dumpMemory();
+//    dumpMemory();
 }
 
 // store one position of the autoplay locations
