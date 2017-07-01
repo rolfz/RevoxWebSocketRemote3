@@ -46,6 +46,7 @@ void setup() {
 
   Serial.begin(115200);        // Start the Serial communication to send messages to the computer
   delay(10);
+
   Serial.println("\r\n");
 
   Serial.println("Revox Wifi Remote V0.94 beta 22.6.2017");

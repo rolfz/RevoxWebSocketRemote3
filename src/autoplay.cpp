@@ -20,6 +20,7 @@ volatile int gotoPos=0;
 volatile int startPos=0;
 volatile int endPos=0;
 volatile bool fromplay = false;
+volatile uint32_t delayCnt=0;
 
 void gotoPosition(uint8 * index){
 
@@ -71,7 +72,6 @@ void playMemory(uint8 * index){
 void autoPlay(int state){
 
 //   if(state != END)Serial.println(stateTxt[state]);
-
    switch(state){
 
    case GOTO:
@@ -116,14 +116,19 @@ void autoPlay(int state){
         }
         break;
   case WAIT_STOP:
-        if(tapeMove()==0){
+        if((millis()-delayCnt)>2000){
+//          Serial.println(millis());
+//        if(tapeMove()==0){
             task=PLAY;
-        }
+           }
         break;
    case STOP:
       updateValue("status","STOP");
       runStop();
-      if(fromplay == true) task=WAIT_STOP;
+      if(fromplay == true){ delayCnt=millis();
+                          //  Serial.println(delayCnt);
+                            task=WAIT_STOP;
+                          }
                   else task=END;
    break;
    case END:
