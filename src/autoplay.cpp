@@ -19,8 +19,13 @@ volatile int task;
 volatile int gotoPos=0;
 volatile int startPos=0;
 volatile int endPos=0;
-volatile bool fromplay = false;
+volatile bool toPlay = false;
+volatile bool repeat = false;
 volatile uint32_t delayCnt=0;
+// distance correction relative to speed 50/100/200/400
+int const rewTab[]={5,10,15,20,50};
+int const forTab[]={5,10,10,10,20};
+bool const SPD_CORR =true;
 
 void gotoPosition(uint8 * index){
 
@@ -60,27 +65,39 @@ void playMemory(uint8 * index){
       endPos=EEPROM.read(loc+8);
       endPos+=EEPROM.read(loc+9)<<8;
 
-/*      Serial.print("startPos: ");
-      Serial.println(startPos);
-      Serial.print("endPos: ");
-      Serial.println(endPos);
-  */
-     fromplay = true;
+     toPlay = true;
      task=GOTO;
   }
 
 void autoPlay(int state){
-
+  int corr;
+  int dif;
 //   if(state != END)Serial.println(stateTxt[state]);
    switch(state){
 
    case GOTO:
       if(mainCnt<gotoPos){
-         runForward();
+        // we end in forward
+        dif=gotoPos-mainCnt;
+        if(dif<50)corr=forTab[0];
+        else if(dif<100)corr=forTab[1];
+        else if(dif<200)corr=forTab[2];
+        else if(dif<400)corr=forTab[3];
+        else corr=forTab[4];
+
          updateValue("status","FORWARD");
+         runForward();
          task=WAIT_FORWARD;
       }
       else if(mainCnt>gotoPos){
+        // we end in reverse
+        dif=mainCnt-gotoPos;
+        if(dif<50)corr=forTab[0];
+        else if(dif<100)corr=forTab[1];
+        else if(dif<200)corr=forTab[2];
+        else if(dif<400)corr=forTab[3];
+        else corr=forTab[4];
+
          updateValue("status","REWIND");
          runRewind();
          task=WAIT_REWIND;
@@ -90,47 +107,54 @@ void autoPlay(int state){
       }
    break;
 
-   case PLAY:
-        updateValue("status","PLAY");
-        runPlay();
-        task=WAIT_PLAY_END;
-        fromplay=false;
-   break;
-
-   case WAIT_PLAY_END:
-       if(mainCnt>=endPos){
-          task=STOP;
-       }
-       break;
-
    case WAIT_REWIND:
-        if(mainCnt<=gotoPos){
+        if(mainCnt<=gotoPos+corr){
            task=STOP;
         }
         break;
 
    case WAIT_FORWARD:
-         if(mainCnt>=gotoPos){
-
+         if(mainCnt>=gotoPos-corr){
           task=STOP;
         }
         break;
-  case WAIT_STOP:
-        if((millis()-delayCnt)>2000){
-//          Serial.println(millis());
-//        if(tapeMove()==0){
-            task=PLAY;
-           }
-        break;
+
    case STOP:
       updateValue("status","STOP");
       runStop();
-      if(fromplay == true){ delayCnt=millis();
+      if(toPlay == true || repeat== true){ delayCnt=millis();
                           //  Serial.println(delayCnt);
                             task=WAIT_STOP;
                           }
-                  else task=END;
+              else task=END;
    break;
+   case WAIT_STOP:
+         if((millis()-delayCnt)>2000){ // tape stopped
+           //Tape is stopped
+           // we are here if we have to play or of we repeat
+                if(repeat==true){
+                      task=GOTO;
+                      // if we repeat we will again play...
+                      toPlay=true;
+                    }
+                else
+                task=PLAY;
+            }
+   break;
+
+      case PLAY:
+           updateValue("status","PLAY");
+           runPlay();
+           task=WAIT_PLAY_END;
+           toPlay=false;
+  break;
+
+  case WAIT_PLAY_END:
+          if(mainCnt>=endPos){
+             task=STOP;
+          }
+  break;
+
    case END:
    // do nothing
    break;

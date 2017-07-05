@@ -34,7 +34,6 @@ var ws;
 		document.getElementById(data.id).innerHTML =  pad(data.count,4);
 	};
 
-
  function initDisplay(){
   // When ready...
       window.addEventListener("load",function() {
@@ -59,8 +58,17 @@ function sendButton(obj){
 		 }
 };
 
+function checkBox(obj,action){
+
+//			console.log(obj);
+//			console.log(action);
+			var message ={"checkObj":obj,"checkData":action};
+			ws.send(JSON.stringify(message));
+};
+
 function pad(num, size) {
-    var s = "000000000" + num;
+	  if(num<0)num=num*1+10000;
+    var s = "0000" + num;
     return s.substr(s.length-size);
 };
 
