@@ -57,7 +57,7 @@ function sendButton(obj){
 		console.log(obj);
 		 }
 };
-
+/*
 function checkBox(obj,action){
 
 //			console.log(obj);
@@ -65,7 +65,7 @@ function checkBox(obj,action){
 			var message ={"checkObj":obj,"checkData":action};
 			ws.send(JSON.stringify(message));
 };
-
+*/
 function pad(num, size) {
 	  if(num<0)num=num*1+10000;
     var s = "0000" + num;

@@ -12,9 +12,11 @@
 #include "autoplay.h"
 
 //#define DEBUG
+#define MULTI
 
+#ifdef MULTI
 ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
-
+#endif
 ESP8266WebServer server = ESP8266WebServer(80);       // create a web server on port 80 -99
 WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket server on port 81
 
@@ -74,16 +76,26 @@ void updateCounters() {
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
 void startWiFi() { // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
-
-  WiFi.disconnect();
+#define INIT_WIFI
+#ifdef INIT_WIFI
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_OFF);
+  WiFi.enableAP(0);
+  WiFi.mode(WIFI_AP_STA);
+ #endif
+/*  WiFi.disconnect();
   WiFi.softAPdisconnect();
-  WiFi.setAutoConnect(true);
-
-  WiFi.softAP(ssid, password);             // Start the access point
+  WiFi.setAutoConnect(true);  delay(1000);
+*/
+  WiFi.softAP(ssid,password);             // Start the access point
   Serial.print("Access Point \"");
   Serial.print(ssid);
   Serial.println("\" started\r\n");
+  IPAddress myIP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(myIP);
 
+#ifdef MULTI
   wifiMulti.addAP(myssid, mypassword);   // add Wi-Fi networks you want to connect to
   wifiMulti.addAP(ssid2, password2);
   wifiMulti.addAP(ssid3, password3);
@@ -103,6 +115,7 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
     Serial.print("Station connected to ESP8266 AP");
   }
   Serial.println("\r\n");
+#endif // MULTI
 }
 
 void startOTA() { // Start the OTA service
@@ -212,7 +225,10 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
     #endif
     return true;
   }
+  #ifdef DEBUG
+  // this line makes problems sending error on UART
   Serial.println(String("\tFile Not Found: ") + path);   // If the file doesn't exist, return false
+  #endif
   return false;
 }
 
@@ -304,7 +320,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           handleInterrupt();
         }
         wifiCall = false;
-      }
+      } // end #
 
 
       if (payload[0] == '$') {           // We received a key press from the web page
@@ -314,7 +330,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
                       G= Goto Start
                       E= Store End position
                       O= Goto End position
-                      P= Play the programmed part        /*
+                      P= Play the programmed part
+                      R= repeat, set variable true or false
         Serial.print(String(payload[1]));
         Serial.print("memory: ");
         Serial.println(String(payload[2]));
@@ -353,7 +370,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 
           payload[0]='X';
 //        updateCounters();
-      }
+      } // end $
       break;
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\r\n", num, length);
