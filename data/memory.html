@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Revox Wifi Remote</title>
+  <meta charset="utf-8">
+  <meta name="apple-touch-fullscreen" content="yes" >
+  <meta name="apple-mobile-web-app-capable" content="yes" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" >
+
+  <link rel="apple-touch-icon" href="img/revox.png" />
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet"  href="revox.css">
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="WebSocket.js" type="text/javascript"></script>
+</head>
+<body>
+<center>
+	<div class="container-fluid" id="wrapper";>
+	<!--h2> <span>REVOX B77 WIFI REMOTE SETUP  </span></h2>
+    <h3><button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
+    <span class="label label-default" id="maincnt">COUNTER</span>
+	<span class="label label-default" style="display; width:400px;" id="status">STOP</span-->
+
+    <div class="tab-content" >
+    <div id="memory" class="tab-pane fade in active">
+
+	  <h2>B77 Memory setup <a href="index.html"> ->Main</a>
+
+	  <p><h2>
+		   <button type="button" id="#R" class="btn btn-warning" onclick="sendButton(this.id)">REWIND</button>
+    	 <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">FORWARD</button>
+		   <span id="maincnt" class="label label-default">COUNTER</span>
+  		 <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">PLAY</button>
+		   <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">STOP</button>
+	  </h2></p>
+
+      <b><h5>Store "start" and "stop" position and "play"</b>
+		  <p>
+			 <h3>M1 <button type="button" id="$S1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button>
+					<span id="pS1" class="label label-default">Ct1s</span>
+						<button type="button" id="$G1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$E1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button>
+					<span id="pE1" class="label label-default">Ct1e</span>
+						<button type="button" id="$O1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$P1" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play</button>
+			 </h3>
+			 <h3>M2 <button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button>
+					<span id="pS2" class="label label-default">Ct2s</span>
+						<button type="button" id="$G2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$E2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button>
+					<span id="pE2" class="label label-default">Ct2e</span>
+						<button type="button" id="$O2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$P2" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play</button>
+			 </h3>
+		  </p>
+		</div> <!-- end of table -->
+		</div>
+	</div>
+	<div id="warning-message">
+	<h2><center>
+	Revox Wifi Remote
+	<h3>
+    this website is only viewable in landscape mode
+	!please rotate your phone !
+	<p>&copy; 2017 z-control.ch</p>
+	</h3>
+	</center></h2>
+	</div>
+	</center>
+  </body>
+</html>

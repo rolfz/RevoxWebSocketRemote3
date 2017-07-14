@@ -10,6 +10,7 @@
 #include "WifiSettings.h"
 #include "MCP_Code.h"
 #include "autoplay.h"
+#include "ArduinoJson.h"
 
 //#define DEBUG
 #define MULTI
@@ -67,6 +68,26 @@ void updateCounters() {
         json += "\"c5s\": \"" + String(cntS[5]) + "\",";
         json += "\"c5e\": \"" + String(cntE[5]) + "\"}";
 
+//  Serial.println(json);
+  server.send(200, "application/json", json);
+  // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
+}
+
+// initial counter update
+void updateOffsets() {
+
+ String json = "{\"o1b\": \"" + String(rewTab[0]) + "\",";   // pack all other memory values
+        json += "\"o1f\": \"" + String(forTab[0]) + "\",";
+        json += "\"o2b\": \"" + String(rewTab[1]) + "\",";
+        json += "\"o2f\": \"" + String(forTab[1]) + "\",";
+        json += "\"o3b\": \"" + String(rewTab[2]) + "\",";
+        json += "\"o3f\": \"" + String(forTab[2]) + "\",";
+        json += "\"o4b\": \"" + String(rewTab[3]) + "\",";
+        json += "\"o4f\": \"" + String(forTab[3]) + "\",";
+        json += "\"o5b\": \"" + String(rewTab[4]) + "\",";
+        json += "\"o5f\": \"" + String(forTab[4]) + "\"}";
+
+//  Serial.println(json);
 
   server.send(200, "application/json", json);
   // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
@@ -186,6 +207,8 @@ void startServer() { // Start a HTTP server with a file read handler and an uplo
   }, handleFileUpload);                       // go to 'handleFileUpload'
 
   server.on("/update.json", updateCounters);
+  server.on("/offset.json", updateOffsets);
+
   server.onNotFound(handleNotFound);          // if someone requests any other file or page, go to function 'handleNotFound'
   // and check if the file exists
 
@@ -263,13 +286,16 @@ void handleFileUpload() { // upload a new file to the SPIFFS
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length ) { // When a WebSocket message is received
 
+//  Serial.print("type=");
+//  Serial.println(type);
+
   switch (type) {
     case WStype_DISCONNECTED:             // if the websocket is disconnected
       Serial.printf("[%u] Disconnected!\n", num);
       break;
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
-        //Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+      //  Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
         updateCounter("maincnt",mainCnt); // << we send the counter value here
       }
       break;
@@ -369,9 +395,27 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
                         }
 
           payload[0]='X';
-//        updateCounters();
       } // end $
+
+      // we handle data from the tape delay page (setup)
+      if(payload[0]=='{'){ // we get json in the payload
+
+        StaticJsonBuffer<300> JSONBuffer;   //Memory pool
+        JsonObject& parsed = JSONBuffer.parseObject(payload); //Parse
+
+        if (!parsed.success()) {
+
+          Serial.println("Parsing failed");
+          return;
+        }
+
+        const char * id = parsed["id"]; //Get sensor type value
+        int value = parsed["value"];                                         //Get value of sensor measurement
+
+        storeOffset(id,value);
+      }
       break;
+
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\r\n", num, length);
       hexdump(payload, length);

@@ -1,0 +1,26 @@
+
+    #warning-message { display: none; }
+    @media only screen and (orientation:portrait){
+        #wrapper { display:none; }
+        #warning-message { display:block; }
+    }
+    @media only screen and (orientation:landscape){
+        #warning-message { display:none; }
+    }
+
+  body { background: #202020;
+  		     color:white;
+  		   }
+
+  a { font-size:18px;}
+
+	h2 { margin: 10px  0 10px 0;}
+	h4 h3 { margin: 0  0 10px 0;}
+
+	td { padding-left: 10px;
+      }
+
+  input {	text-align: center;
+  	      display: block;
+          color: black;
+	       }

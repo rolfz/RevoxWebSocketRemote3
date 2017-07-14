@@ -23,8 +23,10 @@ volatile bool toPlay = false;
 volatile bool repeat = false;
 volatile uint32_t delayCnt=0;
 // distance correction relative to speed 50/100/200/400
-int const rewTab[]={25,40,60,80,100};
-int const forTab[]={20,40,40,40,80};
+
+volatile int16_t rewTab[5]={-25,-40,-60,-80,-100};
+volatile int16_t forTab[5]={20,40,40,40,80};
+
 bool const SPD_CORR =true;
 
 void gotoPosition(uint8 * index){
@@ -114,7 +116,7 @@ void autoPlay(int state){
         break;
 
    case WAIT_FORWARD:
-         if(mainCnt>=gotoPos-corr){
+         if(mainCnt>=gotoPos+corr){
           task=STOP;
         }
         break;

@@ -17,4 +17,7 @@ void playMemory(uint8 * index);
 void gotoZero(void);
 void autoPlay(int state);
 
+extern volatile int16_t rewTab[5];
+extern volatile int16_t forTab[5];
+
 #endif

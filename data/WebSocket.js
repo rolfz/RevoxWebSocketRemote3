@@ -12,6 +12,7 @@ var ws;
 		console.log('OO, WebSocket open');
 		ws.send('Connect ' + new Date());
 		updateCounters();
+  	updateOffsets();
 		initDisplay();
 	};
 
@@ -28,10 +29,10 @@ var ws;
 		var data = JSON.parse(evt.data);
 	//	console.log('OM: Parsed:');
 	//	console.log(data);
-		if((data.id)=="status")
-		document.getElementById(data.id).innerHTML =  data.value;
-		else
-		document.getElementById(data.id).innerHTML =  pad(data.count,4);
+		if((data.id)=="status"){ // means text of function to be displayed
+		document.getElementById(data.id).innerHTML =  data.value;}
+		else if((data.id)=="maincnt"){ // or it means the counter value to have 0 heading ie 0001
+		document.getElementById(data.id).innerHTML =  pad(data.count,4);}
 	};
 
  function initDisplay(){
@@ -57,6 +58,13 @@ function sendButton(obj){
 		console.log(obj);
 		 }
 };
+
+function sendInput(id, msg){
+	// send data to the server
+	var json = JSON.stringify({"id":id,"value":msg});
+  ws.send(json);
+	console.log(json);
+};
 /*
 function checkBox(obj,action){
 
@@ -71,6 +79,7 @@ function pad(num, size) {
     var s = "0000" + num;
     return s.substr(s.length-size);
 };
+/* this function is probably not required
 
 function updateCounter(){
 $.getJSON('/update2.json', function(data){
@@ -81,7 +90,7 @@ $.getJSON('/update2.json', function(data){
   console.log("err getJSON mesures.json "+JSON.stringify(err));
 });
 };
-
+*/
 function updateCounters(){
 $.getJSON('/update.json', function(data){
 
@@ -97,8 +106,26 @@ $.getJSON('/update.json', function(data){
   $('#pE5').html(pad(data.c5e,4));
 
   }).fail(function(err){
-  console.log("err getJSON mesures.json "+JSON.stringify(err));
-});
+  		console.log("err getJSON mesures.json "+JSON.stringify(err));
+			});
 };
 
+function updateOffsets(){
+$.getJSON('/offset.json', function(data){
+
+  $('#B1').val(data.o1b);
+  $('#B2').val(data.o2b);
+  $('#B3').val(data.o3b);
+  $('#B4').val(data.o4b);
+  $('#B5').val(data.o5b);
+  $('#F1').val(data.o1f);
+  $('#F2').val(data.o2f);
+  $('#F3').val(data.o3f);
+  $('#F4').val(data.o4f);
+  $('#F5').val(data.o5f);
+
+  }).fail(function(err){
+  		console.log("err getJSON offset.json "+JSON.stringify(err));
+			});
+};
 //window.setInterval(updateCounters ,1000);
