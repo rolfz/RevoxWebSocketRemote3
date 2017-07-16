@@ -23,6 +23,9 @@ WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket serv
 
 File fsUploadFile;                                    // a File variable to temporarily store the received file
 
+
+#define SERIAL_DEBUG  Serial
+
 enum  revstat {STOP,PLAY,FORWARD,REWIND,RECORD,PAUSE,NOPAUSE};
 char  revState=STOP;
 char pauseState=NOPAUSE;
@@ -44,6 +47,7 @@ void updateValue( String(id),String (data)) {
       webSocket.broadcastTXT(json);
 }
 
+// update main counter
 void updateCounter( String(id),int (data)) {
 
   String json = "{\"id\": \"" + id + "\",";
@@ -97,19 +101,26 @@ void updateOffsets() {
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
 void startWiFi() { // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
-#define INIT_WIFI
+//#define INIT_WIFI
 #ifdef INIT_WIFI
   WiFi.persistent(false);
   WiFi.mode(WIFI_OFF);
-  WiFi.enableAP(0);
   WiFi.mode(WIFI_AP_STA);
  #endif
-/*  WiFi.disconnect();
+#define TESTING
+  #ifdef TESTING
+  bool autoConnect;
   WiFi.softAPdisconnect();
-  WiFi.setAutoConnect(true);  delay(1000);
-*/
+
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_AP_STA); // softap only WIFI_AP_STA for both
+  autoConnect = WiFi.getAutoConnect();
+  #endif
   WiFi.softAP(ssid,password);             // Start the access point
+//  WiFi.softAP(ssid);             // Start the access point
+
   Serial.print("Access Point \"");
+  //Serial.print(ssid);
   Serial.print(ssid);
   Serial.println("\" started\r\n");
   IPAddress myIP = WiFi.softAPIP();
@@ -370,7 +381,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         switch(payload[1]) {
               // store start and end position
               case 'S': case 'E': storePosition(payload);
-                                updateCounter(str,mainCnt);
+                                restoreCounters(); // we could add code to update individual counters
+                                updateCounters();
                                break;
               // goto start position
               case 'G':   gotoPosition(payload);

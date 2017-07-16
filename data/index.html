@@ -17,64 +17,131 @@
   <script src="js/bootstrap.min.js"></script>
   <script src="WebSocket.js" type="text/javascript"></script>
 
+  <script>
+      #warning-message { display: none; }
+    @media only screen and (orientation:portrait){
+        #tabs { display:none; }
+        #warning-message { display:block; }
+    }
+    @media only screen and (orientation:landscape){
+        #warning-message { display:none; }
+    }
+  </script>
 </head>
 <body>
   <center>
-	<div class="container-fluid" id="wrapper";>
-	<span><h2>REVOX B77 WIFI REMOTE <a href="memory.html">->Memory</a> <a href="offset.html">->Setup</a></span>
+  <div class="container"> <!-- will be blanked when rotated on tablet-->
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#main">Main</a></li>
+    <li><a data-toggle="tab" href="#menu1">Memory</a></li>
+    <li><a data-toggle="tab" href="#menu2">Setup</a></li>
+  </ul>
+<!-------------------------------------------------------------------------------------------------------->
+<div class="tab-content">
+	<div  id="main"  class="tab-pane fade in active">
+	<span><h2>REVOX B77 WIFI REMOTE</span>
     <h3><button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
     <span id="maincnt" class="label label-default">COUNTER</span>
 	<span id="status" class="label label-default" style="display; width:400px;">STOP</span>
     <button type="button" id="$ZZ" class="btn btn-primary" onclick="sendButton(this.id)">GOTO ZERO</button></h3>
     <div class="tab-content" >
-
 	<!-- HERE STARTS THE COMMAND MENU -->
-    <div id="remote" class="tab-pane fade in active">
-      <p>
+    <p>
 		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">PAUSE</button>
-
 		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">REWIND</button>
-
 		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">FORWARD</button>
-
 		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">PLAY</button>
-
 		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">STOP</button>
-
 		  <button type="button" id="#E" class="btn btn-warning" onclick="sendButton(this.id)" disabled=true;>RECORD</button>
-       <!--input type="checkbox" name="record" value="off">Enable<br-->
-       <input type="checkbox"  onchange="document.getElementById('#E').disabled = !this.checked;"><a>ENA</a></input>
-       <!--input type="submit" name="sendNewSms" class="inputButton" id="sendNewSms" value=" Send " /-->
-
-	   <!--button type="button" id="update" class="btn btn-primary" onclick="updateCounter()">UPDATE</button-->
-
+      <input type="checkbox"  onchange="document.getElementById('#E').disabled = !this.checked;"></input><a>ENA</a>
 	  </p>
-	   <b>Store "start" and "stop" position and "play"</b>
+	   <b>Play memory or goto "start" or "stop" position</b>
 	  <p>
-		 <h3>M1 <!--button type="button" id="$S1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
-		 <span id="pS1" class="label label-default">Ct1s</span>
-		 <button type="button" id="$G1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto Start</button>
-		 <!--button type="button" id="$E1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button-->
-		 <span id="pE1" class="label label-default">Ct1e</span>
-		 <button type="button" id="$O1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto End</button>
-		 <button type="button" id="$P1" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play M1</button>
-     <!--input type="checkbox" id="$R1" class="btn btn-default" onchange="checkBox(this.id,this.checked)"><a>REP</a-->
-     </h3>
+  		 <h3>M1 <!--button type="button" id="$S1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
+  		 <span id="pS1" class="label label-default">Ct1s</span>
+  		 <button type="button" id="$G1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto Start</button>
+  		 <span id="pE1" class="label label-default">Ct1e</span>
+  		 <button type="button" id="$O1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto End</button>
+  		 <button type="button" id="$P1" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play M1</button>
+       </h3>
 	  </p>
-	  <p>
-		 <h3>M2 <!--button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
- 		 <span id="pS2" class="label label-default">Ct2s</span>
-		 <button type="button" id="$G2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto Start</button>
-		 <!--button type="button" id="$E2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button-->
-		 <span id="pE2" class="label label-default">Ct2e</span>
-		 <button type="button" id="$O2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto End</button>
-		 <button type="button" id="$P2" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play M2</button>
-     <!--input type="checkbox" id="$R2" class="btn btn-default" onchange="checkBox(this.id,this.checked)"><a>REP</a-->
-    </h3>
-	</p>
-    </div>
+    	  <p>
+    		 <h3>M2 <!--button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
+     		 <span id="pS2" class="label label-default">Ct2s</span>
+    		 <button type="button" id="$G2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto Start</button>
+    		 <span id="pE2" class="label label-default">Ct2e</span>
+    		 <button type="button" id="$O2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">Goto End</button>
+    		 <button type="button" id="$P2" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play M2</button>
+        </h3>
+    	 </p>
    </div> <!-- end of table -->
   </div>
+  <!--------------------------------------------------------------------------------------------------------->
+    <div id="menu1" class="tab-pane fade">
+	  <h2>B77 Memory setup</h2>
+	  <p><h2>
+		   <button type="button" id="#R" class="btn btn-warning" onclick="sendButton(this.id)">REWIND</button>
+    	 <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">FORWARD</button>
+		   <span id="secCnt" class="label label-default">COUNTER</span>
+  		 <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">PLAY</button>
+		   <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">STOP</button>
+	    </h2>
+    </p>
+    <b><h5>Store "start" and "stop" position and "play"</b>
+		  <p>
+			 <h3>M1 <button type="button" id="$S1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button>
+					<span id="qS1" class="label label-default">Ct1s</span>
+						<button type="button" id="$G1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$E1" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button>
+					<span id="qE1" class="label label-default">Ct1e</span>
+						<button type="button" id="$O1" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$P1" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play</button>
+			 </h3>
+			 <h3>M2 <button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button>
+					<span id="qS2" class="label label-default">Ct2s</span>
+						<button type="button" id="$G2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$E2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">END</button>
+					<span id="qE2" class="label label-default">Ct2e</span>
+						<button type="button" id="$O2" class="btn btn-primary btn-sm" onclick="sendButton(this.id)">GOTO</button>
+						<button type="button" id="$P2" class="btn btn-success btn-sm" onclick="sendButton(this.id)">Play</button>
+			 </h3>
+		  </p>
+	</div>
+  <!--------------------------------------------------------------------------------------------------------->
+  <div id="menu2" class="tab-pane fade">
+    <table>
+		 <thead>
+	     <tr><h2>B77 Stop correction</tr>
+		 <tr><th><h3>Range: </th><th><h4><center>Foreward</th><th><center><h4>Rewind</th></tr>
+		 </thead>
+      	 <tbody><h4>
+      		<tr>
+      			<td>&lt;50 </td><td><input type="number" id="F1" onchange="sendInput(this.id,this.value)"></td>
+      			<td><input type="number" id="B1" onchange="sendInput(this.id,this.value)"></td>
+      		</tr>
+      		<tr>
+      			<td>&lt;100 </td><td><input type="number" id="F2" onchange="sendInput(this.id,this.value)"></td>
+      			<td><input type="number" id="B2" onchange="sendInput(this.id,this.value)"></td>
+      		</tr>
+      		<tr>
+      			<td>&lt;200 </td><td><input type="number" id="F3" onchange="sendInput(this.id,this.value)"></td>
+      			<td><input type="number" id="B3" onchange="sendInput(this.id,this.value)"></td>
+      		</tr>
+      		<tr>
+      			<td>&lt;400 </td><td><input type="number" id="F4" onchange="sendInput(this.id,this.value)"></td>
+      			<td><input type="number" id="B4" onchange="sendInput(this.id,this.value)"></td>
+      		</tr>
+      		<tr>
+      			<td>&gt400 </td><td><input type="number" id="F5" onchange="sendInput(this.id,this.value)"></td>
+      			<td><input type="number" id="B5" onchange="sendInput(this.id,this.value)"></td>
+      		</tr>
+		      </h4>
+		 </tbody>
+	  </table>
+  </div> <!-- end menu2-->
+</div> <!-- end of tab content -->
+</div> <!-- end container -->
+<!--------------------------------------------------------------------------------------------------------->
 	<div id="warning-message">
 	<h2><center>
 	Revox Wifi Remote

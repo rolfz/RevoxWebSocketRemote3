@@ -32,7 +32,9 @@ var ws;
 		if((data.id)=="status"){ // means text of function to be displayed
 		document.getElementById(data.id).innerHTML =  data.value;}
 		else if((data.id)=="maincnt"){ // or it means the counter value to have 0 heading ie 0001
-		document.getElementById(data.id).innerHTML =  pad(data.count,4);}
+		document.getElementById(data.id).innerHTML =  pad(data.count,4);
+		document.getElementById("secCnt").innerHTML =  pad(data.count,4);
+		}
 	};
 
  function initDisplay(){
@@ -105,6 +107,10 @@ $.getJSON('/update.json', function(data){
   $('#pS5').html(pad(data.c5s,4));
   $('#pE5').html(pad(data.c5e,4));
 
+	$('#qS1').html(pad(data.c1s,4));
+  $('#qE1').html(pad(data.c1e,4));
+  $('#qS2').html(pad(data.c2s,4));
+  $('#qE2').html(pad(data.c2e,4));
   }).fail(function(err){
   		console.log("err getJSON mesures.json "+JSON.stringify(err));
 			});

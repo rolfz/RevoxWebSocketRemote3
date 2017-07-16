@@ -100,7 +100,7 @@ void storePosition(uint8 * index){
              cntS[loc]=cnt;
              loc=loc*2; // memory location
              }
-        else{
+        else{ // it is an 'E'
              cntE[loc]=cnt;
              loc=(loc*2)+8; // memory location
             }
@@ -117,9 +117,9 @@ void storePosition(uint8 * index){
     Serial.print(cnt);
     #endif
 
+    #ifdef DEBUG
     int tmp = EEPROM.read(loc);
     tmp +=EEPROM.read(loc+1)<<8;
-    #ifdef DEBUG
     Serial.print(" read loc: ");
     Serial.print(loc);
     Serial.print(" = ");
