@@ -72,8 +72,8 @@ void playMemory(uint8 * index){
   }
 
 void autoPlay(int state){
-  int corr;
-  int dif;
+  static int corr;
+  static int dif;
 //   if(state != END)Serial.println(stateTxt[state]);
    switch(state){
 
@@ -94,11 +94,11 @@ void autoPlay(int state){
       else if(mainCnt>gotoPos){
         // we end in reverse
         dif=mainCnt-gotoPos;
-        if(dif<50)corr=forTab[0];
-        else if(dif<100)corr=forTab[1];
-        else if(dif<200)corr=forTab[2];
-        else if(dif<400)corr=forTab[3];
-        else corr=forTab[4];
+        if(dif<50)corr=rewTab[0];
+        else if(dif<100)corr=rewTab[1];
+        else if(dif<200)corr=rewTab[2];
+        else if(dif<400)corr=rewTab[3];
+        else corr=rewTab[4];
 
          updateValue("status","REWIND");
          runRewind();

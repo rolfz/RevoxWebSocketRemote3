@@ -19,7 +19,7 @@ extern File fsUploadFile;
 void updateValue( String(id),String (data));
 void updateCounter( String(id),int (data));
 void updateCounters(void);
-
+void updateOffsets(void);
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
 void startWiFi();

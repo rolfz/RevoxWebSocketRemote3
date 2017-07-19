@@ -27,14 +27,21 @@ var ws;
 	ws.onmessage = function (evt) {
 	//	console.log('OM: Received from Server: ', evt);
 		var data = JSON.parse(evt.data);
-	//	console.log('OM: Parsed:');
-	//	console.log(data);
+//		console.log('OM: Parsed:');
+//		console.log(data);
 		if((data.id)=="status"){ // means text of function to be displayed
-		document.getElementById(data.id).innerHTML =  data.value;}
+				document.getElementById(data.id).innerHTML =  data.value;}
 		else if((data.id)=="maincnt"){ // or it means the counter value to have 0 heading ie 0001
-		document.getElementById(data.id).innerHTML =  pad(data.count,4);
-		document.getElementById("secCnt").innerHTML =  pad(data.count,4);
-		}
+				document.getElementById(data.id).innerHTML =  pad(data.count,4);
+				document.getElementById("secCnt").innerHTML =  pad(data.count,4);
+				}
+// 	  else if("S" in data.id || "E" in data.id){ // does not work
+		else { // if it is not maincnt or status it must be the memory counters
+				document.getElementById(data.id).innerHTML =  pad(data.count,4);
+				// we need to replace the first char with nto display on page 2
+				data.id = data.id.replace(data.id.charAt(0), "n");
+				document.getElementById(data.id).innerHTML =  pad(data.count,4);
+				}
 	};
 
  function initDisplay(){
@@ -67,50 +74,25 @@ function sendInput(id, msg){
   ws.send(json);
 	console.log(json);
 };
-/*
-function checkBox(obj,action){
 
-//			console.log(obj);
-//			console.log(action);
-			var message ={"checkObj":obj,"checkData":action};
-			ws.send(JSON.stringify(message));
-};
-*/
 function pad(num, size) {
 	  if(num<0)num=num*1+10000;
     var s = "0000" + num;
     return s.substr(s.length-size);
 };
-/* this function is probably not required
 
-function updateCounter(){
-$.getJSON('/update2.json', function(data){
-
-  $('#maincnt').html(pad(data.cMa,4));
-
-  }).fail(function(err){
-  console.log("err getJSON mesures.json "+JSON.stringify(err));
-});
-};
-*/
 function updateCounters(){
 $.getJSON('/update.json', function(data){
 
-  $('#pS1').html(pad(data.c1s,4));
-  $('#pE1').html(pad(data.c1e,4));
-  $('#pS2').html(pad(data.c2s,4));
-  $('#pE2').html(pad(data.c2e,4));
-  $('#pS3').html(pad(data.c3s,4));
-  $('#pE3').html(pad(data.c3e,4));
-  $('#pS4').html(pad(data.c4s,4));
-  $('#pE4').html(pad(data.c4e,4));
-  $('#pS5').html(pad(data.c5s,4));
-  $('#pE5').html(pad(data.c5e,4));
+  $('#mS1').html(pad(data.mS1,4));
+  $('#mE1').html(pad(data.mE2,4));
+  $('#mS2').html(pad(data.mS2,4));
+  $('#mE2').html(pad(data.mE2,4));
+  $('#nS1').html(pad(data.mS1,4));
+	$('#nE1').html(pad(data.mE1,4));
+	$('#nS2').html(pad(data.mS2,4));
+	$('#nE2').html(pad(data.mE2,4));
 
-	$('#qS1').html(pad(data.c1s,4));
-  $('#qE1').html(pad(data.c1e,4));
-  $('#qS2').html(pad(data.c2s,4));
-  $('#qE2').html(pad(data.c2e,4));
   }).fail(function(err){
   		console.log("err getJSON mesures.json "+JSON.stringify(err));
 			});

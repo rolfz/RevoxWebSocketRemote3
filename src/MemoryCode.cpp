@@ -92,7 +92,7 @@ void restoreOffset(void){
 
 
 // store one position of the autoplay locations
-void storePosition(uint8 * index){
+int storePosition(uint8 * index){
 
   int cnt=mainCnt; // we store not to loose the exact position
   int loc=index[2]-'0'; // will be 1/2/3 (*2 means start at 2, no offset needed)
@@ -125,6 +125,7 @@ void storePosition(uint8 * index){
     Serial.print(" = ");
     Serial.println(tmp);
     #endif
+    return(cnt);
     }
 
 //

@@ -37,66 +37,6 @@ char json[10000];                                   // Buffer pour export du JSO
 volatile bool wifiCall = false;
 volatile uint8_t wifiPin = 0;
 
-void updateValue( String(id),String (data)) {
-
-  String json = "{\"id\": \"" + id + "\",";
-         json+= "\"value\": \"" + data + "\"}";
-
-//  Serial.print("JSON : ");  Serial.println(json);
-
-      webSocket.broadcastTXT(json);
-}
-
-// update main counter
-void updateCounter( String(id),int (data)) {
-
-  String json = "{\"id\": \"" + id + "\",";
-         json+= "\"count\": \"" + String(data) + "\"}";
-
-//  Serial.print("JSON : ");  Serial.println(json);
-
-      webSocket.broadcastTXT(json);
-}
-
-// initial counter update
-void updateCounters() {
-
- String json = "{\"c1s\": \"" + String(cntS[1]) + "\",";   // pack all other memory values
-        json += "\"c1e\": \"" + String(cntE[1]) + "\",";
-        json += "\"c2s\": \"" + String(cntS[2]) + "\",";
-        json += "\"c2e\": \"" + String(cntE[2]) + "\",";
-        json += "\"c3s\": \"" + String(cntS[3]) + "\",";
-        json += "\"c3e\": \"" + String(cntE[3]) + "\",";
-        json += "\"c4s\": \"" + String(cntS[4]) + "\",";
-        json += "\"c4e\": \"" + String(cntE[4]) + "\",";
-        json += "\"c5s\": \"" + String(cntS[5]) + "\",";
-        json += "\"c5e\": \"" + String(cntE[5]) + "\"}";
-
-//  Serial.println(json);
-  server.send(200, "application/json", json);
-  // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
-}
-
-// initial counter update
-void updateOffsets() {
-
- String json = "{\"o1b\": \"" + String(rewTab[0]) + "\",";   // pack all other memory values
-        json += "\"o1f\": \"" + String(forTab[0]) + "\",";
-        json += "\"o2b\": \"" + String(rewTab[1]) + "\",";
-        json += "\"o2f\": \"" + String(forTab[1]) + "\",";
-        json += "\"o3b\": \"" + String(rewTab[2]) + "\",";
-        json += "\"o3f\": \"" + String(forTab[2]) + "\",";
-        json += "\"o4b\": \"" + String(rewTab[3]) + "\",";
-        json += "\"o4f\": \"" + String(forTab[3]) + "\",";
-        json += "\"o5b\": \"" + String(rewTab[4]) + "\",";
-        json += "\"o5f\": \"" + String(forTab[4]) + "\"}";
-
-//  Serial.println(json);
-
-  server.send(200, "application/json", json);
-  // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
-}
-
 
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
@@ -373,16 +313,22 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         Serial.print("memory: ");
         Serial.println(String(payload[2]));
         */
+
+        // create name for sending data to the web page
+        // $ is replaced with m
         char str[10];
         memcpy(str, payload,length);
         str[length] = '\0';
-        str[0]='p';
+        str[0]='m';
 
         switch(payload[1]) {
               // store start and end position
-              case 'S': case 'E': storePosition(payload);
-                                restoreCounters(); // we could add code to update individual counters
-                                updateCounters();
+              case 'S': case 'E':{
+                              int tmpCnt=storePosition(payload);
+                              //  restoreCounters(); // we could add code to update individual counters
+                              //   updateCounters();
+                              updateCounter(str,tmpCnt);
+                               }
                                break;
               // goto start position
               case 'G':   gotoPosition(payload);
@@ -439,6 +385,64 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       Serial.printf("Invalid WStype [%d]\r\n", type);
       break;
   }
+}
+
+/*--------------------------------------- Counter update ------------------------------------*/
+// routine to update a field of text
+void updateValue( String(id),String (data)) {
+
+  String json = "{\"id\": \"" + id + "\",";
+         json+= "\"value\": \"" + data + "\"}";
+//  Serial.print("JSON : ");  Serial.println(json);
+      webSocket.broadcastTXT(json);
+}
+// routine to update a number converted into a string
+// update main counter
+void updateCounter( String(id),int (data)) {
+
+  String json = "{\"id\": \"" + id + "\",";
+         json+= "\"count\": \"" + String(data) + "\"}";
+
+//  Serial.print("JSON : ");  Serial.println(json);
+
+      webSocket.broadcastTXT(json);
+}
+
+// initial counter update
+void updateCounters() {
+
+ String json = "{\"mS1\": \"" + String(cntS[1]) + "\",";   // pack all other memory values
+        json += "\"mE1\": \"" + String(cntE[1]) + "\",";
+        json += "\"mS2\": \"" + String(cntS[2]) + "\",";
+        json += "\"mE2\": \"" + String(cntE[2]) + "\"}";
+
+//  Serial.print("Counters: ");
+//  Serial.println(json);
+  server.send(200, "application/json", json);
+  json=" ";
+  // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
+}
+
+
+// initial counter update
+void updateOffsets() {
+
+ String json = "{\"o1b\": \"" + String(rewTab[0]) + "\",";   // pack all other memory values
+        json += "\"o1f\": \"" + String(forTab[0]) + "\",";
+        json += "\"o2b\": \"" + String(rewTab[1]) + "\",";
+        json += "\"o2f\": \"" + String(forTab[1]) + "\",";
+        json += "\"o3b\": \"" + String(rewTab[2]) + "\",";
+        json += "\"o3f\": \"" + String(forTab[2]) + "\",";
+        json += "\"o4b\": \"" + String(rewTab[3]) + "\",";
+        json += "\"o4f\": \"" + String(forTab[3]) + "\",";
+        json += "\"o5b\": \"" + String(rewTab[4]) + "\",";
+        json += "\"o5f\": \"" + String(forTab[4]) + "\"}";
+
+//Serial.print("Offset: ");
+//Serial.println(json);
+  server.send(200, "application/json", json);
+  json=" ";
+  // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
 }
 
 /*__________________________________________________________HELPER_FUNCTIONS__________________________________________________________*/
