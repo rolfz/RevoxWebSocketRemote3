@@ -15,7 +15,7 @@ boolean B_set;
 #define encoder0PinA HALL_SENS
 #define encoder0PinB HALL_DIR
 
-volatile int mainCnt=0; // Tape counter 
+volatile int16_t mainCnt=0; // Tape counter 
 
 void startEncoder(void){
 

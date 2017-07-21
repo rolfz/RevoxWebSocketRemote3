@@ -24,4 +24,4 @@ framework = arduino
 board = d1_mini
 
 upload_port = 192.168.1.116
-upload_flags = --auth=esp8266
+upload_flags = --auth=esp8266 --spiffs

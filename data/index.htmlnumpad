@@ -19,6 +19,36 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="WebSocket.js" type="text/javascript"></script>
+  
+  <link rel="stylesheet" href="css/jquery.numpad.css">
+  <script type="text/javascript" src="js/jquery.numpad.js"></script>
+  
+		<script type="text/javascript">
+			// Set NumPad defaults for jQuery mobile. 
+			// These defaults will be applied to all NumPads within this document!
+			$.fn.numpad.defaults.gridTpl = '<table class="table modal-content"></table>';
+			$.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+			$.fn.numpad.defaults.displayTpl = '<input type="text" class="form-control" />';
+			$.fn.numpad.defaults.buttonNumberTpl =  '<button type="button" class="btn btn-default"></button>';
+			$.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="width: 100%;"></button>';
+			$.fn.numpad.defaults.onKeypadCreate = function(){$(this).find('.done').addClass('btn-primary');};
+			
+			// Instantiate NumPad once the page is ready to be shown
+			$(document).ready(function(){
+				$('#maincnt').numpad({
+					target: $('#maincnt'),
+					hidePlusMinusButton: true,
+					hideDecimalButton: true	
+				});
+			});
+		</script>
+		<style type="text/css">
+			.controlgroup-textinput{
+				padding-top: .22em;
+				padding-bottom: .22em;
+			}
+		</style>
+		
   <style>
       #warning-message { display: none; }
     @media only screen and (orientation:portrait){
@@ -84,13 +114,13 @@
 	<span><h2>REVOX B77 WIFI REMOTE</span>
     <br><label><input id="zero" type="checkbox" class="in" onclick="onToggle()" checked></input><a>0 Stop</a></label>
     <button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
-	  <label id="maincnt" class="btn btn-default">COUNT</label>
-    <label id="status" class="btn" style="width: 100px;">STOP</label>
-
-    <!--label id="maincnt1" type="humber" class="btn btn-default">COUNT</label-->
+	<!--label id="maincnt" class="btn btn-default" onclick="sendButton(this.id)">COUNT</label>
+	<!--button class="btn btn-default" id="numpadButton-btn" onchange="alert('Value changed to ' + $(this).val());">COUNT</button-->
+	<button class="btn btn-default" id="maincnt" onchange="alert('Value changed to ' + $(this).val());">COUNT</button>
+	<label id="status" class="btn" style="width: 100px;">STOP</label>
 	<label><input type="checkbox" class="in" onchange="document.getElementById('#E').disabled = !this.checked;"></input><a>Enable</a></label></h3>
 
-  <div class="tab-content" >
+    <div class="tab-content" >
 	<!-- HERE STARTS THE COMMAND MENU -->
     <p>
 		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
@@ -213,7 +243,6 @@
 		      </h4>
 		 </tbody>
 	  </table>
-    <h6>version</h6>
   </div> <!-- end menu2-->
 </div> <!-- end of tab content -->
 </div> <!-- end container -->

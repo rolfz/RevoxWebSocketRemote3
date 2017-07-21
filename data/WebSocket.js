@@ -9,7 +9,7 @@ var ws;
 	ws = new WebSocket('ws://'+location.hostname+':81/');
 
 	ws.onopen = function(evt){
-		console.log('OO, WebSocket open');
+//		console.log('OO, WebSocket open');
 		ws.send('Connect ' + new Date());
 		updateCounters();
   	updateOffsets();
@@ -85,7 +85,7 @@ function updateCounters(){
 $.getJSON('/update.json', function(data){
 
   $('#mS1').html(pad(data.mS1,4));
-  $('#mE1').html(pad(data.mE2,4));
+  $('#mE1').html(pad(data.mE1,4));
   $('#mS2').html(pad(data.mS2,4));
   $('#mE2').html(pad(data.mE2,4));
   $('#nS1').html(pad(data.mS1,4));
@@ -97,6 +97,23 @@ $.getJSON('/update.json', function(data){
   		console.log("err getJSON mesures.json "+JSON.stringify(err));
 			});
 };
+
+  // on toggle method
+  // to check status of checkbox
+ function onToggle() {
+    // check if checkbox is checked
+		var msg;
+    if (document.querySelector('#zero').checked) {
+      // if checked
+    	msg="%1";
+    } else {
+      // if unchecked
+			msg="%0";
+    }
+//	var json = JSON.stringify({"id":zero,"value":msg});
+		console.log(msg);
+		ws.send(msg);
+  };
 
 function updateOffsets(){
 $.getJSON('/offset.json', function(data){

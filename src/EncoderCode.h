@@ -9,6 +9,6 @@ void doEncoderB(void);
 void doEncoderA(void);
 void startEncoder(void);
 
-extern volatile int mainCnt; // Tape counter
+extern volatile int16_t mainCnt; // Tape counter
 
 #endif

@@ -27,7 +27,7 @@
 volatile int integerValue=0;
 int const SHUT_DOWN_PIN=14;
 int const SHUT_DOWN_THESHOLD=1;
-volatile int lastMainCnt=0;
+volatile int16_t lastMainCnt=0;
 
 void displayCounter(void){
   // update counter on display,
@@ -49,7 +49,7 @@ void setup() {
 
   Serial.println("\r\n");
 
-  Serial.println("Revox Wifi Remote V0.94 beta 22.6.2017");
+  Serial.println("Revox Wifi Remote V0.95 beta 21.7.2017");
 //  Serial.println(__FILE__);
   Serial.println("Compiled: " __DATE__ " " __TIME__);
   Serial.println("File:     RevoxWebSocketRemote.ino\n");
@@ -136,6 +136,7 @@ void loop() {
                 }
 
    autoPlay(task);
+   stopZero(mainCnt);
    displayCounter();
 
 }// end main loop

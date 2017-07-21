@@ -5,8 +5,8 @@
 #include <EEPROM.h>
 #include "EncoderCode.h"
 
-extern volatile int cntS[5];
-extern volatile int cntE[5];
+extern volatile int16_t cntS[5];
+extern volatile int16_t cntE[5];
 
 void startEEPROM(void);
 int storePosition(uint8 * index);

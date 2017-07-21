@@ -14,12 +14,17 @@ extern ESP8266WebServer server;
 extern WebSocketsServer webSocket;
 
 extern File fsUploadFile;
+extern volatile char  revState;
+
+enum  revstat {WSTOP,WPLAY,WFORWARD,WREWIND,WRECORD,WPAUSE,WNOPAUSE};
+
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 
 void updateValue( String(id),String (data));
 void updateCounter( String(id),int (data));
 void updateCounters(void);
 void updateOffsets(void);
+void stopZero(int cnt);
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
 void startWiFi();

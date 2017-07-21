@@ -23,8 +23,8 @@
 //   20-29   int "offset" forward/reverse each 2 bytes * 5, all used
 #define OFFSET_START 22
 
-volatile int cntS[5]={0,0,0,0,0};
-volatile int cntE[5]={0,0,0,0,0};
+volatile int16_t cntS[5]={0,0,0,0,0};
+volatile int16_t cntE[5]={0,0,0,0,0};
 
 // initalize eeprom function
 void startEEPROM(void){
@@ -94,8 +94,8 @@ void restoreOffset(void){
 // store one position of the autoplay locations
 int storePosition(uint8 * index){
 
-  int cnt=mainCnt; // we store not to loose the exact position
-  int loc=index[2]-'0'; // will be 1/2/3 (*2 means start at 2, no offset needed)
+  int16_t cnt=mainCnt; // we store not to loose the exact position
+  int8_t loc=index[2]-'0'; // will be 1/2/3 (*2 means start at 2, no offset needed)
   if(index[1]=='S'){
              cntS[loc]=cnt;
              loc=loc*2; // memory location
@@ -130,7 +130,7 @@ int storePosition(uint8 * index){
 
 //
 void storeMainCnt(void){
-    int cnt=mainCnt;
+    int16_t cnt=mainCnt;
     EEPROM.write(0, cnt & 0xff);
     EEPROM.write(1, cnt >> 8);
     #ifdef DEBUG

@@ -1,9 +1,7 @@
 /*
   WEB code for RevoxB77 wifi remote controller
-
   By Rolf Ziegler
   June 2017
-
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 #include "WEB_Code.h"
 #include "MemoryCode.h"
@@ -26,9 +24,8 @@ File fsUploadFile;                                    // a File variable to temp
 
 #define SERIAL_DEBUG  Serial
 
-enum  revstat {STOP,PLAY,FORWARD,REWIND,RECORD,PAUSE,NOPAUSE};
-char  revState=STOP;
-char pauseState=NOPAUSE;
+volatile char  revState=WSTOP;
+char pauseState=WNOPAUSE;
 
 const char* mdnsName = "esp8266"; // Domain name for the mDNS responder
 
@@ -36,7 +33,6 @@ char json[10000];                                   // Buffer pour export du JSO
 
 volatile bool wifiCall = false;
 volatile uint8_t wifiPin = 0;
-
 
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
@@ -92,7 +88,8 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
 
 void startOTA() { // Start the OTA service
   // Port defaults to 8266
-  ArduinoOTA.setPort(8081);
+  //ArduinoOTA.setPort(8081);
+  ArduinoOTA.setPort(8266);
 
   ArduinoOTA.setHostname(OTAName);
   ArduinoOTA.setPassword(OTAPassword);
@@ -119,9 +116,9 @@ void startOTA() { // Start the OTA service
   });
   ArduinoOTA.begin();
   Serial.println("OTA ready\r\n");
-/*  Serial.println("Ready");
+  Serial.println("Ready");
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());*/
+  Serial.println(WiFi.localIP());
 }
 
 void startSPIFFS() { // Start the SPIFFS and list all contents
@@ -259,33 +256,35 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         // convert web command into MCP interrupt call.
         switch (payload[1]) {
           case 'P': wifiPin = PausePin;
-                    pauseState=PAUSE;
+                    pauseState=WPAUSE;
                     // update value will display the last command on the top line of the web page (grey)
                     updateValue("status","PAUSE");
             break;
           case 'R': wifiPin = RewindPin;
-                    revState=REWIND;
+                    revState=WREWIND;
                     pauseState=NONE;
                     updateValue("status","REWIND");
+                    // we prepare the stop position with correction. Stop in main loop
+                    stopPos=speedCorr(mainCnt, rewTab );
             break;
           case 'F': wifiPin = ForwardPin;
-                    revState=FORWARD;
+                    revState=WFORWARD;
                     pauseState=NONE;
                     updateValue("status","FORWARD");
             break;
           case 'L': wifiPin = PlayPin;
-                    revState=PLAY;
+                    revState=WPLAY;
                     pauseState=NONE;
                     updateValue("status","PLAY");
             break;
           case 'S': wifiPin = StopPin;
-                    revState=STOP;
+                    revState=WSTOP;
                     pauseState=NONE;
                     updateValue("status","STOP");
-                    task=STOP;
+                    task=WSTOP;
             break;
           case 'E': wifiPin = RecordPin;
-                    revState=RECORD;
+                    revState=WRECORD;
                     pauseState=NONE;
                     updateValue("status","RECORD");
             break;
@@ -371,6 +370,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         int value = parsed["value"];                                         //Get value of sensor measurement
 
         storeOffset(id,value);
+      }
+
+
+      if(payload[0]=='%'){           // We received a key press from the web page
+
+    //  Serial.printf("get command: %s\n", payload);
+
+          if(payload[1]=='0'){
+              zeroStop=false;
+              }
+              else{
+              zeroStop=true;
+              }
       }
       break;
 
@@ -465,3 +477,5 @@ String getContentType(String filename) { // determine the filetype of a given fi
   else if (filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
+
+// end of code
