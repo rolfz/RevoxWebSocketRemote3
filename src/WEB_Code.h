@@ -21,10 +21,10 @@ enum  revstat {WSTOP,WPLAY,WFORWARD,WREWIND,WRECORD,WPAUSE,WNOPAUSE};
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 
 void updateValue( String(id),String (data));
-void updateCounter( String(id),int (data));
+void updateCounter( String(id),int16_t (data));
 void updateCounters(void);
 void updateOffsets(void);
-void stopZero(int cnt);
+//void stopZero(int16_t cnt);
 /*__________________________________________________________SETUP_FUNCTIONS__________________________________________________________*/
 
 void startWiFi();

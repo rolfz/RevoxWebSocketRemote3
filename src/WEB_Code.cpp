@@ -244,7 +244,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_CONNECTED: {              // if a new websocket connection is established
         IPAddress ip = webSocket.remoteIP(num);
       //  Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-        updateCounter("maincnt",mainCnt); // << we send the counter value here
+        updateCounter("mainCnt",mainCnt); // << we send the counter value here
       }
       break;
     case WStype_TEXT:                     // if new text data is received
@@ -318,15 +318,15 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         char str[10];
         memcpy(str, payload,length);
         str[length] = '\0';
-        str[0]='m';
+        str[0]='n';
 
         switch(payload[1]) {
               // store start and end position
               case 'S': case 'E':{
-                              int tmpCnt=storePosition(payload);
+                              int16_t tmpCnt=storePosition(payload,mainCnt);
                               //  restoreCounters(); // we could add code to update individual counters
-                              //   updateCounters();
                               updateCounter(str,tmpCnt);
+                              //updateCounter(str,tmpCnt);
                                }
                                break;
               // goto start position
@@ -354,7 +354,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           payload[0]='X';
       } // end $
 
-      // we handle data from the tape delay page (setup)
+      // we handle data from the tape delay page (setup) in json format
+      // or the new counter value if the id is newCnt
       if(payload[0]=='{'){ // we get json in the payload
 
         StaticJsonBuffer<300> JSONBuffer;   //Memory pool
@@ -367,9 +368,48 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
         }
 
         const char * id = parsed["id"]; //Get sensor type value
-        int value = parsed["value"];                                         //Get value of sensor measurement
+        int16_t value = parsed["value"];                                         //Get value of sensor measurement
 
-        storeOffset(id,value);
+        if(String(id)=="newCnt"){
+           mainCnt=value;
+           // update done in main loop.
+        }
+        else
+
+        // change memory location.
+        if(String(id[0])=="n"){
+
+          storePosition((uint8_t *)id,value);
+          #ifdef DEBUG
+          Serial.println("received Memory counter");
+          Serial.print("ID: ");
+          Serial.print(id);
+          Serial.print(" value: ");
+          Serial.println(value);
+          #endif
+          updateCounter(String(id),value);
+
+        //  updateCounters();
+
+
+        } else
+
+        if(String(id[0])=="o"){
+          #ifdef DEBUG
+          Serial.println("received offset");
+          Serial.print("ID: ");
+          Serial.print(id);
+          Serial.print(" value: ");
+          Serial.println(value);
+          #endif
+          storeOffset(id,value);
+          updateOffsets();
+          //updateValue(String(id), String (value));
+        }
+        else {
+          Serial.println("error: unknown command from web page!");
+        }
+
       }
 
 
@@ -405,18 +445,16 @@ void updateValue( String(id),String (data)) {
 
   String json = "{\"id\": \"" + id + "\",";
          json+= "\"value\": \"" + data + "\"}";
-//  Serial.print("JSON : ");  Serial.println(json);
+  Serial.print("JSON : ");  Serial.println(json);
       webSocket.broadcastTXT(json);
 }
 // routine to update a number converted into a string
 // update main counter
-void updateCounter( String(id),int (data)) {
+void updateCounter( String(id),int16_t (data)) {
 
   String json = "{\"id\": \"" + id + "\",";
          json+= "\"count\": \"" + String(data) + "\"}";
-
 //  Serial.print("JSON : ");  Serial.println(json);
-
       webSocket.broadcastTXT(json);
 }
 
@@ -436,7 +474,7 @@ void updateCounters() {
 }
 
 
-// initial counter update
+// initial counter update for the tape stop delays (offsets)
 void updateOffsets() {
 
  String json = "{\"o1b\": \"" + String(rewTab[0]) + "\",";   // pack all other memory values

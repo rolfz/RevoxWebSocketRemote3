@@ -92,9 +92,8 @@ void restoreOffset(void){
 
 
 // store one position of the autoplay locations
-int storePosition(uint8 * index){
+int16_t storePosition(uint8_t * index, int16_t cnt){
 
-  int16_t cnt=mainCnt; // we store not to loose the exact position
   int8_t loc=index[2]-'0'; // will be 1/2/3 (*2 means start at 2, no offset needed)
   if(index[1]=='S'){
              cntS[loc]=cnt;

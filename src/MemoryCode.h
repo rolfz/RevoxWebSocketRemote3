@@ -9,7 +9,7 @@ extern volatile int16_t cntS[5];
 extern volatile int16_t cntE[5];
 
 void startEEPROM(void);
-int storePosition(uint8 * index);
+int16_t storePosition(uint8_t * index, int16_t cnt);
 void storeMainCnt(void);
 void storeOffset(const char * index, int16_t value);
 void restoreOffset(void);

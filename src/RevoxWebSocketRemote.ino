@@ -32,11 +32,11 @@ volatile int16_t lastMainCnt=0;
 void displayCounter(void){
   // update counter on display,
   if(mainCnt!=lastMainCnt){
-      int tmpCnt=mainCnt;
+      int16_t tmpCnt=mainCnt;
       if(mainCnt<0)tmpCnt=10000+mainCnt;
       Serial.print(tmpCnt);
       Serial.print("\n");
-      updateCounter("maincnt",tmpCnt); // << we send the counter value here
+      updateCounter("mainCnt",tmpCnt); // << we send the counter value here
       lastMainCnt=mainCnt;
   }
 }
@@ -131,7 +131,7 @@ void loop() {
 
               if (incomingByte == 'R'){
                   mainCnt=0;
-                  updateCounter("maincnt",mainCnt);
+                  updateCounter("mainCnt",mainCnt);
                   }
                 }
 
