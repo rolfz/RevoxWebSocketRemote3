@@ -28,7 +28,8 @@ Developpment hardware with test connection and switches.
 ## API, web interface
 
 The web interface is bootstrap based, will be reviewed for the final version
-![WEB interface](remote.jpg)
+![WEB interface](Wifi-main.jpg)
+![WEB interface](Wifi-edit.jpg)
 
 ## Contributors
 
