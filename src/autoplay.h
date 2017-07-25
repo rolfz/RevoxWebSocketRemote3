@@ -21,8 +21,8 @@ void autoPlay(int state);
 void stopZero(int16_t cnt);
 int16_t speedCorr(int16_t dif,int16_t tab[] );
 
-extern int16_t rewTab[5];
-extern int16_t forTab[5];
+extern int16_t rewTab[6];
+extern int16_t forTab[6];
 extern volatile bool zeroStop;
 extern volatile int16_t stopPos;
 

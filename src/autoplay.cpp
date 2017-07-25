@@ -1,11 +1,9 @@
 /*
 Autoplay code for movements on Revox B77 tape recorder
-
 By Rolf Ziegler
-June 2017
+June-Juillet 2017
 
 */
-
 #include "autoplay.h"
 #include "MCP_code.h"
 #include "WEB_Code.h"
@@ -25,8 +23,8 @@ volatile bool zeroStop = true;
 volatile int16_t stopPos=0;
 
 // distance correction relative to speed 50/100/200/400
-int16_t rewTab[5]={-25,-40,-60,-80,-100};
-int16_t forTab[5]={20,40,40,40,80};
+int16_t rewTab[6]={-25,-40,-60,-80,-100,-120};
+int16_t forTab[6]={20,40,40,40,80,100};
 
 bool const SPD_CORR =true;
 
@@ -37,7 +35,8 @@ int16_t speedCorr(int16_t dif,int16_t tab[] ){
     else if(dif<100)corr=tab[1];
     else if(dif<200)corr=tab[2];
     else if(dif<400)corr=tab[3];
-    else corr=tab[4];
+    else if(dif<800)corr=tab[4];
+    else corr=tab[5];
     return corr;
 }
 

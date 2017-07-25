@@ -2,7 +2,7 @@
 Encoder code for mesuring turns on Revox B77 tape recorder
 
 By Rolf Ziegler
-June 2017
+June-Juillet 2017
 
 */
 #include "EncoderCode.h"
@@ -15,7 +15,7 @@ boolean B_set;
 #define encoder0PinA HALL_SENS
 #define encoder0PinB HALL_DIR
 
-volatile int16_t mainCnt=0; // Tape counter 
+volatile int16_t mainCnt=0; // Tape counter
 
 void startEncoder(void){
 

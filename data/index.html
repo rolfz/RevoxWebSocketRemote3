@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Rebox Wifi Remote</title>
+  <title>Revox Wifi Remote</title>
   <meta charset="utf-8">
   <meta name="apple-touch-fullscreen" content="yes" >
   <meta name="apple-mobile-web-app-capable" content="yes" >
@@ -21,7 +21,7 @@
   <script src="WebSocket.js" type="text/javascript"></script>
 
   <style>
-      #warning-message { display: none; }
+    #warning-message { display: none; }
     @media only screen and (orientation:portrait){
         #all { display:none; }
         #warning-message { display:block; }
@@ -30,30 +30,43 @@
         #warning-message { display:none; }
 		}
 
-	  body { background: #202020;
+	body { background: #202020;
 						 color:white;
-					   }
+						 width: 400px;
+						}
 
     a { font-size:14px;
-		vertical-align: bottom;
+		vertical-align: -2px;
+		}
+	.in {vertical-align: -12px;
 		}
 
     h2 { margin: 10px  0 5px 0;}
-	  h3 { margin: 0px 0 15px 0;}
+	h3 { margin: 0px 0 15px 0;}
     h4 { margin: 0  0 10px 0;}
 
-   td { padding-left: 10px;
+    td { padding-left: 10px;
                    }
 
-   label { width: 70px; }
+    label { width: 70px;
+			}
 
-   input {	text-align: center;
-                      display: block;
-                       color: black;
-                     }
+    input {	width:70px;
+			text-align: bottom;
+            display: block;
+            color: black;
+			}
 
 	input[type="number"] {
 		-moz-appearance: textfield;
+	}
+
+	#status {
+		font-size:16px;
+		font-weight:bold;
+	    border-style: solid;
+        border-width: 1px;
+		border-color: white;
 	}
 
 	input[type="number"]::-webkit-outer-spin-button,
@@ -62,33 +75,21 @@
 		margin: 0;
 	}
 
-	input {	width:70px;	}
+    #newCnt input[type=number]::-webkit-inner-spin-button,
+    #newCnt input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+		}
 
-  #newCnt input[type=number]::-webkit-inner-spin-button,
-  #newCnt input[type=number]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-   }
+	button { min-width: 70px;
+			 font-size: 16px;}
 
-   button { min-width: 70px;
-   }
-
-	#mainCnt, #newCnt {
-			width: 100px;
-			}
+	#mainCnt, #newCnt {	width: 100px;
+				 font-weight:bold;
+				 font-size:16px;
+				 border: 1px;
+		}
   </style>
-
-  <script>
-  function checkInp()
-{
-  var x=document.forms["myForm"]["age"].value;
-  if (isNaN(x))
-  {
-    alert("Must input numbers");
-    return false;
-  }
-}
-  </script>
 </head>
 <body>
 <center>
@@ -102,42 +103,29 @@
 <!-------------------------------------------------------------------------------------------------------->
 <div class="tab-content">
 	<div  id="main"  class="tab-pane fade in active">
-	<span><h2>REUOX B77 WIFI REMOTE</span>
-    <br><label><input id="zero" type="checkbox" class="in" onclick="onToggle()" checked></input><a>0 Stop</a></label>
-    <button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
-    <!--label id="maincnt" class="btn btn-default" onclick="launchNumpad(this.id);">COUNT</label-->
-    <label id="mainCnt" type="number" class="btn btn-default">COUNT</label>
-    <label id="status" class="btn" style="width: 100px;">STOP</label>
-  <label><input type="checkbox" class="in" onchange="document.getElementById('#E').disabled = !this.checked;"></input><a>Enable</a></label></h3>
-
-  <!--input id="num" type="text" readonly="true"/>
-  <input type="button" value="..." onclick="$('keypad').style.display='inline-block';"/>
-
-  <div id="keypad" style="display:none; background:#AAA; vertical-align:top;">
-  <input type="number" value="7"/>
-  <input type="button" value="X" onclick="$('keypad').style.display='none'"/>
-  <input type="button" value="&larr;" onclick="$('num').value=$('num').value.substr(0,$('num').value.length-1);"/>
-</div-->
-    <!--label id="maincnt1" type="number" class="btn btn-default">COUNT</label-->
-   <!--input id="keypad"  type="number" class="btn btn-default"></input-->
+	<span><h2>REVOX B77 WiFi Remote</span></h2>
+		<label class="in"><input id="zero" type="checkbox" onclick="onToggle()" checked ></input><a>0 Stop</a></label>
+		<button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
+		<!--label id="maincnt" class="btn btn-default" onclick="launchNumpad(this.id);">COUNT</label-->
+		<label id="mainCnt" type="number" class="btn btn-default">COUNT</label>
+		<label id="status" class="btn" style="width: 100px;">STOP</label>
+	<label class="in" ><input type="checkbox" class="in" onchange="document.getElementById('#E').disabled = !this.checked;"></input><a>Enable</a></label>
 
   <div class="tab-content" >
 	<!-- HERE STARTS THE COMMAND MENU -->
     <p>
-		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-pause"></span> </button>
-		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-backward"></span> </button>
-		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-forward"></span> </button>
-
-		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-play"></span> </button>
-		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-stop"></span> </button>
-		  <button type="button" id="#E" class="btn btn-warning" onclick="sendButton(this.id)" disabled=true;>
-		  <span class="glyphicon glyphicon-record"></span> REC</button>
-
+    		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
+    		  <span class="glyphicon glyphicon-pause"></span> </button>
+    		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">
+    		  <span class="glyphicon glyphicon-backward"></span> </button>
+    		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">
+    		  <span class="glyphicon glyphicon-forward"></span> </button>
+    		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">
+    		  <span class="glyphicon glyphicon-play"></span> </button>
+    		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">
+    		  <span class="glyphicon glyphicon-stop"></span> </button>
+    		  <button type="button" id="#E" class="btn btn-warning" onclick="sendButton(this.id)" disabled=true;>
+    		  <span class="glyphicon glyphicon-record"></span> REC</button>
 	  </p>
 	   <b>Play memory or goto "start" or "stop" position</b>
 	  <p>
@@ -146,7 +134,7 @@
 			    <button type="button" id="$G1" class="btn btn-primary" onclick="sendButton(this.id)">
 			    <span class="glyphicon glyphicon-fast-backward"></span> </button>
 			    <label id="mE1" class="btn btn-default">Ct1e</label> <!--END-->
-			 <button type="button" id="$O1" class="btn btn-primary" onclick="sendButton(this.id)">
+			    <button type="button" id="$O1" class="btn btn-primary" onclick="sendButton(this.id)">
 			    <span class="glyphicon glyphicon-fast-forward"></span> </button>
 			    <button type="button" id="$P1" class="btn btn-success" onclick="sendButton(this.id)">
 			    <span class="glyphicon glyphicon-play"></span> PLAY 1</button>
@@ -154,48 +142,60 @@
 	  </p>
     	  <p>
     		 <h4><!--button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
-			 M2 <label id="mS2" class="btn btn-default">Ct2s</label> <!--START-->
+			   M2 <label id="mS2" class="btn btn-default">Ct2s</label> <!--START-->
     		    <button type="button" id="$G2" class="btn btn-primary" onclick="sendButton(this.id)">
 			      <span class="glyphicon glyphicon-fast-backward"></span></button>
-    		  <label id="mE2" class="btn btn-default">Ct2e</label> <!--END-->
+    		    <label id="mE2" class="btn btn-default">Ct2e</label> <!--END-->
     		    <button type="button" id="$O2" class="btn btn-primary" onclick="sendButton(this.id)">
 			      <span class="glyphicon glyphicon-fast-forward"></span></button>
     		    <button type="button" id="$P2" class="btn btn-success" onclick="sendButton(this.id)">
 			      <span class="glyphicon glyphicon-play"></span> PLAY 2</button>
        </h4>
     	 </p>
+       <p>
+        <h4><!--button type="button" id="$S2" class="btn btn-danger btn-sm" onclick="sendButton(this.id)">START</button-->
+        M3 <label id="mS3" class="btn btn-default">Ct2s</label> <!--START-->
+           <button type="button" id="$G3" class="btn btn-primary" onclick="sendButton(this.id)">
+           <span class="glyphicon glyphicon-fast-backward"></span></button>
+           <label id="mE3" class="btn btn-default">Ct2e</label> <!--END-->
+           <button type="button" id="$O3" class="btn btn-primary" onclick="sendButton(this.id)">
+           <span class="glyphicon glyphicon-fast-forward"></span></button>
+           <button type="button" id="$P3" class="btn btn-success" onclick="sendButton(this.id)">
+           <span class="glyphicon glyphicon-play"></span> PLAY 3</button>
+       </h4>
+      </p>
    </div> <!-- end of table -->
   </div>
   <!--------------------------------------------------------------------------------------------------------->
-    <div id="menu1" class="tab-pane fade">
-	  <h2>REUOX B77 Setup/Edit</h2>
+  <div id="menu1" class="tab-pane fade">
+	  <h2>REVOX B77 WiFi Setup/Edit</h2>
 	  <p><h2>
-		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-pause"></span> </button>
-		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-backward"></span> </button>
-		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-forward"></span> </button>
+      		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
+      		  <span class="glyphicon glyphicon-pause"></span> </button>
+      		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">
+      		  <span class="glyphicon glyphicon-backward"></span> </button>
+      		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">
+      		  <span class="glyphicon glyphicon-forward"></span> </button>
 
-		  <!--label id="secCnt" class="btn btn-default" onclick="showInput()">0 </label-->
-      <!--input id="newCnt" class="btn btn-default" pattern="[0-9]" type="number" min="-9999" max="9999" onchange="sendInput(this.id,this.value)"></input-		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)"-->
-  <input id="newCnt" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
-    <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-play"></span> </button>
-		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">
-		  <span class="glyphicon glyphicon-stop"></span> </button>
-      </h2>
+      		  <!--label id="secCnt" class="btn btn-default" onclick="showInput()">0 </label-->
+            <!--input id="newCnt" class="btn btn-default" pattern="[0-9]" type="number" min="-9999" max="9999" onchange="sendInput(this.id,this.value)"></input-		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)"-->
+            <input id="newCnt" class="btn btn-default" pattern="[0-9]*" value="newCnt" onchange="sendInput(this.id,this.value)"/>
+            <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">
+      		  <span class="glyphicon glyphicon-play"></span> </button>
+      		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">
+      		  <span class="glyphicon glyphicon-stop"></span> </button>
+            </h2>
     </p>
-    <b><h5>Store "start" and "stop" position and "play"</b>
+    <b><h5>Store "start" and "stop" position and "play"</h5></b>
 		  <p>
 			 <h3><button type="button" id="$S1" class="btn btn-danger" onclick="sendButton(this.id)">
 						M1 <span class="glyphicon glyphicon-fast-backward"></span></button>
-					<input id="nS1"  class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
+						<input id="nS1"  class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)">
 						<button type="button" id="$G1" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-backward"></span></button>
 						<button type="button" id="$E1" class="btn btn-danger" onclick="sendButton(this.id)">
 						M1 <span class="glyphicon glyphicon-fast-forward"></span></button>
-					<input id="nE1" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
+					  <input id="nE1" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
 						<button type="button" id="$O1" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-forward"></span></button>
 						<button type="button" id="$P1" class="btn btn-success" onclick="sendButton(this.id)">
@@ -203,16 +203,29 @@
 			 </h3>
 			 <h3><button type="button" id="$S2" class="btn btn-danger" onclick="sendButton(this.id)">
 						M2 <span class="glyphicon glyphicon-fast-backward"></span></button>
-					<input id="nS2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
+					  <input id="nS2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
 						<button type="button" id="$G2" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-backward"></span> </button>
 						<button type="button" id="$E2" class="btn btn-danger" onclick="sendButton(this.id)">
 						M2 <span class="glyphicon glyphicon-fast-forward"></span></button>
-					<input id="nE2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
+					  <input id="nE2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
 						<button type="button" id="$O2" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-forward"></span></button>
 						<button type="button" id="$P2" class="btn btn-success" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-play"></span> M2</button>
+			 </h3>
+       <h3><button type="button" id="$S3" class="btn btn-danger" onclick="sendButton(this.id)">
+						M3 <span class="glyphicon glyphicon-fast-backward"></span></button>
+					  <input id="nS3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+						<button type="button" id="$G3" class="btn btn-primary" onclick="sendButton(this.id)">
+						<span class="glyphicon glyphicon-fast-backward"></span> </button>
+						<button type="button" id="$E3" class="btn btn-danger" onclick="sendButton(this.id)">
+						M3 <span class="glyphicon glyphicon-fast-forward"></span></button>
+					  <input id="nE3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+						<button type="button" id="$O3" class="btn btn-primary" onclick="sendButton(this.id)">
+						<span class="glyphicon glyphicon-fast-forward"></span></button>
+						<button type="button" id="$P3" class="btn btn-success" onclick="sendButton(this.id)">
+						<span class="glyphicon glyphicon-play"></span> M3</button>
 			 </h3>
 		  </p>
 	</div>
@@ -220,34 +233,38 @@
   <div id="menu2" class="tab-pane fade">
     <table>
 		 <thead>
-	     <tr><h2>REUOX B77 Stop corrections</tr>
-		 <tr><th><h3>Range: </th><th><h4><center>Foreward</th><th><center><h4>Rewind</th></tr>
+	     <tr><h2>REVOX B77 Stop corrections</tr>
+		 <tr><th><h4>Range: &emsp;</th><th><h4><center>Foreward</th><th><center><h4>Rewind</th></tr>
 		 </thead>
       	 <tbody><h4>
       		<tr>
-      			<td>&lt;50 </td><td><input type="number" id="oF1" onchange="sendInput(this.id,this.value)"></td>
-      			<td><input type="number" id="oB1" onchange="sendInput(this.id,this.value)"></td>
+      			<td>&lt;50 </td><td><input  pattern="-?\d{1,4}" id="oF1" onchange="sendInput(this.id,this.value)"></input></td>
+      			<td><input pattern="-?\d{1,4}" id="oB1" onchange="sendInput(this.id,this.value)"></input></td>
       		</tr>
       		<tr>
-      			<td>&lt;100 </td><td><input type="number" id="oF2" onchange="sendInput(this.id,this.value)"></td>
-      			<td><input type="number" id="oB2" onchange="sendInput(this.id,this.value)"></td>
+      			<td>&lt;100 </td><td><input pattern="-?\d{1,4}" id="oF2" onchange="sendInput(this.id,this.value)"></input></td>
+      			<td><input pattern="-?\d{1,4}" id="oB2" onchange="sendInput(this.id,this.value)"></input></td>
       		</tr>
       		<tr>
-      			<td>&lt;200 </td><td><input type="number" id="oF3" onchange="sendInput(this.id,this.value)"></td>
-      			<td><input type="number" id="oB3" onchange="sendInput(this.id,this.value)"></td>
+      			<td>&lt;200 </td><td><input pattern="-?\d{1,4}" id="oF3" onchange="sendInput(this.id,this.value)"></input></td>
+      			<td><input pattern="-?\d{1,4}" id="oB3" onchange="sendInput(this.id,this.value)"></input></td>
       		</tr>
       		<tr>
-      			<td>&lt;400 </td><td><input type="number" id="oF4" onchange="sendInput(this.id,this.value)"></td>
-      			<td><input type="number" id="oB4" onchange="sendInput(this.id,this.value)"></td>
+      			<td>&lt;400 </td><td><input pattern="-?\d{1,4}" id="oF4" onchange="sendInput(this.id,this.value)"></input></td>
+      			<td><input pattern="-?\d{1,4}" id="oB4" onchange="sendInput(this.id,this.value)"></input></td>
       		</tr>
       		<tr>
-      			<td>&gt400 </td><td><input type="number" id="oF5" onchange="sendInput(this.id,this.value)"></td>
-      			<td><input type="number" id="oB5" onchange="sendInput(this.id,this.value)"></td>
+      			<td>&lt;800 </td><td><input pattern="-?\d{1,4}" id="oF5" onchange="sendInput(this.id,this.value)"></input></td>
+      			<td><input pattern="-?\d{1,4}" id="oB5" onchange="sendInput(this.id,this.value)"></input></td>
       		</tr>
+          <tr>
+            <td>&gt;800 </td><td><input pattern="-?\d{1,4}" id="oF6" onchange="sendInput(this.id,this.value)"></input></td>
+            <td><input pattern="-?\d{1,4}" id="oB6" onchange="sendInput(this.id,this.value)"></input></td>
+          </tr>
 		      </h4>
 		 </tbody>
 	  </table>
-    <h6>version</h6>
+    <h6>z-control.ch 2017 version 1.0 beta</h6>
   </div> <!-- end menu2-->
 </div> <!-- end of tab content -->
 </div> <!-- end container -->

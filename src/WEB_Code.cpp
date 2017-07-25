@@ -1,7 +1,7 @@
 /*
   WEB code for RevoxB77 wifi remote controller
   By Rolf Ziegler
-  June 2017
+  June-Juillet 2017
 /*________________________________________________PAYLOAD CODE__________________________________________________________*/
 #include "WEB_Code.h"
 #include "MemoryCode.h"
@@ -388,10 +388,7 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           Serial.println(value);
           #endif
           updateCounter(String(id),value);
-
         //  updateCounters();
-
-
         } else
 
         if(String(id[0])=="o"){
@@ -403,15 +400,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
           Serial.println(value);
           #endif
           storeOffset(id,value);
-          updateOffsets();
+//          updateOffsets();
           //updateValue(String(id), String (value));
         }
         else {
           Serial.println("error: unknown command from web page!");
         }
-
       }
-
 
       if(payload[0]=='%'){           // We received a key press from the web page
 
@@ -429,7 +424,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
     case WStype_BIN:
       Serial.printf("[%u] get binary length: %u\r\n", num, length);
       hexdump(payload, length);
-
       // echo data back to browser
       webSocket.sendBIN(num, payload, length);
       break;
@@ -445,7 +439,7 @@ void updateValue( String(id),String (data)) {
 
   String json = "{\"id\": \"" + id + "\",";
          json+= "\"value\": \"" + data + "\"}";
-  Serial.print("JSON : ");  Serial.println(json);
+//  Serial.print("JSON : ");  Serial.println(json);
       webSocket.broadcastTXT(json);
 }
 // routine to update a number converted into a string
@@ -461,13 +455,20 @@ void updateCounter( String(id),int16_t (data)) {
 // initial counter update
 void updateCounters() {
 
- String json = "{\"mS1\": \"" + String(cntS[1]) + "\",";   // pack all other memory values
-        json += "\"mE1\": \"" + String(cntE[1]) + "\",";
-        json += "\"mS2\": \"" + String(cntS[2]) + "\",";
-        json += "\"mE2\": \"" + String(cntE[2]) + "\"}";
-
-//  Serial.print("Counters: ");
-//  Serial.println(json);
+ String json = "{\"mS1\": \"" + String(cntS[0]) + "\",";   // pack all other memory values
+        json += "\"mE1\": \"" + String(cntE[0]) + "\",";
+        json += "\"mS2\": \"" + String(cntS[1]) + "\",";
+        json += "\"mE2\": \"" + String(cntE[1]) + "\",";
+        json += "\"mS3\": \"" + String(cntS[2]) + "\",";
+        json += "\"mE3\": \"" + String(cntE[2]) + "\",";
+        json += "\"mS4\": \"" + String(cntS[3]) + "\",";
+        json += "\"mE4\": \"" + String(cntE[3]) + "\",";
+        json += "\"mS5\": \"" + String(cntS[4]) + "\",";
+        json += "\"mE5\": \"" + String(cntE[4]) + "\"}";
+/*
+  Serial.print("Counters: ");
+  Serial.println(json);
+*/
   server.send(200, "application/json", json);
   json=" ";
   // Serial.print("Counter ");  Serial.print(mainCnt);  Serial.println(" updated");
@@ -486,7 +487,9 @@ void updateOffsets() {
         json += "\"o4b\": \"" + String(rewTab[3]) + "\",";
         json += "\"o4f\": \"" + String(forTab[3]) + "\",";
         json += "\"o5b\": \"" + String(rewTab[4]) + "\",";
-        json += "\"o5f\": \"" + String(forTab[4]) + "\"}";
+        json += "\"o5f\": \"" + String(forTab[4]) + "\",";
+        json += "\"o6b\": \"" + String(rewTab[5]) + "\",";
+        json += "\"o6f\": \"" + String(forTab[5]) + "\"}";
 
 //Serial.print("Offset: ");
 //Serial.println(json);

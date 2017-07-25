@@ -42,6 +42,7 @@ var ws;
 				// we need to replace the first char with nto display on page 2
 				data.id = data.id.replace(data.id.charAt(0), "m");
 				document.getElementById(data.id).innerHTML=  pad(data.count,4);
+				document.getElementById(data.id).value=  pad(data.count,4);
 				}
 	};
 
@@ -76,7 +77,7 @@ function sendInput(id, msg){
 			//document.getElementById(data.id).value=0;
 			return;
 			}
-		msg=msg.substr(msg.length-4);
+		//msg=msg.substr(msg.length-4);
 		if(id=="newCnt"){
 		 			if(!confirm("Are you sure!")){
 						return;
@@ -101,13 +102,17 @@ $.getJSON('/update.json', function(data){
   $('#mE1').html(pad(data.mE1,4));
   $('#mS2').html(pad(data.mS2,4));
   $('#mE2').html(pad(data.mE2,4));
-  $('#nS1').val(pad(data.mS1,4));
+	$('#mS3').html(pad(data.mS3,4));
+  $('#mE3').html(pad(data.mE3,4));
+	$('#nS1').val(pad(data.mS1,4));
 	$('#nE1').val(pad(data.mE1,4));
 	$('#nS2').val(pad(data.mS2,4));
 	$('#nE2').val(pad(data.mE2,4));
+	$('#nS3').val(pad(data.mS3,4));
+  $('#nE3').val(pad(data.mE3,4));
 
   }).fail(function(err){
-  		console.log("err getJSON mesures.json "+JSON.stringify(err));
+  		console.log("err getJSON update.json "+JSON.stringify(err));
 			});
 };
 
@@ -136,11 +141,13 @@ $.getJSON('/offset.json', function(data){
   $('#oB3').val(data.o3b);
   $('#oB4').val(data.o4b);
   $('#oB5').val(data.o5b);
+	$('#oB6').val(data.o6b);
   $('#oF1').val(data.o1f);
   $('#oF2').val(data.o2f);
   $('#oF3').val(data.o3f);
   $('#oF4').val(data.o4f);
   $('#oF5').val(data.o5f);
+	$('#oF6').val(data.o6f);
 
   }).fail(function(err){
   		console.log("err getJSON offset.json "+JSON.stringify(err));

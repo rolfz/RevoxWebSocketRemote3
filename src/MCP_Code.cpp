@@ -6,7 +6,7 @@ inside MCP_Code.cpp
 All IO related details are located inside MCP_Code.h
 
 By Rolf Ziegler
-June 2017
+June-Juillet 2017
 Version 1.0
 */
 //#define DEBUG // enable printout debug info
