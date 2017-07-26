@@ -2,19 +2,17 @@
 <html lang="en">
 <head>
   <title>Revox Wifi Remote</title>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <meta name="apple-touch-fullscreen" content="yes" >
-  <meta name="apple-mobile-web-app-capable" content="yes" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" >
-
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
 
   <link rel="apple-touch-icon" href="img/revox.png" />
   <!--link rel="stylesheet" href="css/bootstrap.min.css"-->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-  <!--link rel="stylesheet"  href="revox.css"-->
 
   <script src="js/jquery.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
@@ -24,71 +22,82 @@
     #warning-message { display: none; }
     @media only screen and (orientation:portrait){
         #all { display:none; }
-        #warning-message { display:block; }
+        #warning-message { display:block;}
     }
     @media only screen and (orientation:landscape){
         #warning-message { display:none; }
 		}
 
-	body { background: #202020;
+     body { background: #202020;
 						 color:white;
-						 width: 400px;
 						}
 
     a { font-size:14px;
-		vertical-align: -2px;
-		}
-	.in {vertical-align: -12px;
+		    vertical-align: -2px;
+		      }
+
+	.in {vertical-align: -10px;
 		}
 
     h2 { margin: 10px  0 5px 0;}
-	h3 { margin: 0px 0 15px 0;}
+	  h3 { margin: 0px 0 15px 0;}
     h4 { margin: 0  0 10px 0;}
+    td { padding-left: 10px; }
 
-    td { padding-left: 10px;
-                   }
-
-    label { width: 70px;
-			}
+    label { width: 70px; }
 
     input {	width:70px;
-			text-align: bottom;
+			      text-align: bottom;
             display: block;
             color: black;
 			}
 
-	input[type="number"] {
+	 input[type="number"] {
 		-moz-appearance: textfield;
 	}
 
 	#status {
 		font-size:16px;
 		font-weight:bold;
-	    border-style: solid;
-        border-width: 1px;
+	  border-style: solid;
+    border-width: 1px;
 		border-color: white;
 	}
 
-	input[type="number"]::-webkit-outer-spin-button,
-	input[type="number"]::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
-
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    height:auto;
+  }
     #newCnt input[type=number]::-webkit-inner-spin-button,
     #newCnt input[type=number]::-webkit-outer-spin-button {
 		-webkit-appearance: none;
-		margin: 0;
+
 		}
 
 	button { min-width: 70px;
 			 font-size: 16px;}
 
 	#mainCnt, #newCnt {	width: 100px;
-				 font-weight:bold;
+				 font-weight: bold;
 				 font-size:16px;
 				 border: 1px;
 		}
+
+  .clickable {
+    cursor: pointer;
+  }
+  .btn-default {
+    active;
+  }
+
+  input.btn {
+  -webkit-user-select: initial;
+  -khtml-user-select: initial;
+  -moz-user-select: initial;
+  -ms-user-select: initial;
+  user-select: initial;
+  }
+
   </style>
 </head>
 <body>
@@ -103,7 +112,7 @@
 <!-------------------------------------------------------------------------------------------------------->
 <div class="tab-content">
 	<div  id="main"  class="tab-pane fade in active">
-	<span><h2>REVOX B77 WiFi Remote</span></h2>
+	<h2>REVOX B77 WiFi Remote</h2>
 		<label class="in"><input id="zero" type="checkbox" onclick="onToggle()" checked ></input><a>0 Stop</a></label>
 		<button type="button" id="$CL" class="btn btn-danger" onclick="sendButton(this.id)">CLEAR</button>
 		<!--label id="maincnt" class="btn btn-default" onclick="launchNumpad(this.id);">COUNT</label-->
@@ -169,7 +178,7 @@
   <!--------------------------------------------------------------------------------------------------------->
   <div id="menu1" class="tab-pane fade">
 	  <h2>REVOX B77 WiFi Setup/Edit</h2>
-	  <p><h2>
+	  <p><h3>
       		  <button type="button" id="#P" class="btn btn-primary" onclick="sendButton(this.id)">
       		  <span class="glyphicon glyphicon-pause"></span> </button>
       		  <button type="button" id="#R" class="btn btn-info" onclick="sendButton(this.id)">
@@ -177,25 +186,23 @@
       		  <button type="button" id="#F" class="btn btn-info" onclick="sendButton(this.id)">
       		  <span class="glyphicon glyphicon-forward"></span> </button>
 
-      		  <!--label id="secCnt" class="btn btn-default" onclick="showInput()">0 </label-->
-            <!--input id="newCnt" class="btn btn-default" pattern="[0-9]" type="number" min="-9999" max="9999" onchange="sendInput(this.id,this.value)"></input-		  <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)"-->
-            <input id="newCnt" class="btn btn-default" pattern="[0-9]*" value="newCnt" onchange="sendInput(this.id,this.value)"/>
+            <input id="newCnt" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
             <button type="button" id="#L" class="btn btn-success" onclick="sendButton(this.id)">
       		  <span class="glyphicon glyphicon-play"></span> </button>
       		  <button type="button" id="#S" class="btn btn-danger"  onclick="sendButton(this.id)">
       		  <span class="glyphicon glyphicon-stop"></span> </button>
-            </h2>
+          </h3>
     </p>
     <b><h5>Store "start" and "stop" position and "play"</h5></b>
 		  <p>
 			 <h3><button type="button" id="$S1" class="btn btn-danger" onclick="sendButton(this.id)">
 						M1 <span class="glyphicon glyphicon-fast-backward"></span></button>
-						<input id="nS1"  class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)">
+						<input id="nS1"  class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$G1" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-backward"></span></button>
 						<button type="button" id="$E1" class="btn btn-danger" onclick="sendButton(this.id)">
 						M1 <span class="glyphicon glyphicon-fast-forward"></span></button>
-					  <input id="nE1" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+					  <input id="nE1" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$O1" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-forward"></span></button>
 						<button type="button" id="$P1" class="btn btn-success" onclick="sendButton(this.id)">
@@ -203,12 +210,12 @@
 			 </h3>
 			 <h3><button type="button" id="$S2" class="btn btn-danger" onclick="sendButton(this.id)">
 						M2 <span class="glyphicon glyphicon-fast-backward"></span></button>
-					  <input id="nS2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+					  <input id="nS2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$G2" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-backward"></span> </button>
 						<button type="button" id="$E2" class="btn btn-danger" onclick="sendButton(this.id)">
 						M2 <span class="glyphicon glyphicon-fast-forward"></span></button>
-					  <input id="nE2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+					  <input id="nE2" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$O2" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-forward"></span></button>
 						<button type="button" id="$P2" class="btn btn-success" onclick="sendButton(this.id)">
@@ -216,12 +223,12 @@
 			 </h3>
        <h3><button type="button" id="$S3" class="btn btn-danger" onclick="sendButton(this.id)">
 						M3 <span class="glyphicon glyphicon-fast-backward"></span></button>
-					  <input id="nS3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+					  <input id="nS3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$G3" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-backward"></span> </button>
 						<button type="button" id="$E3" class="btn btn-danger" onclick="sendButton(this.id)">
 						M3 <span class="glyphicon glyphicon-fast-forward"></span></button>
-					  <input id="nE3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"/>
+					  <input id="nE3" class="btn btn-default" pattern="[0-9]*" onchange="sendInput(this.id,this.value)"></input>
 						<button type="button" id="$O3" class="btn btn-primary" onclick="sendButton(this.id)">
 						<span class="glyphicon glyphicon-fast-forward"></span></button>
 						<button type="button" id="$P3" class="btn btn-success" onclick="sendButton(this.id)">
@@ -233,7 +240,7 @@
   <div id="menu2" class="tab-pane fade">
     <table>
 		 <thead>
-	     <tr><h2>REVOX B77 Stop corrections</tr>
+	     <tr><h3>REVOX B77 Stop corrections</h3></tr>
 		 <tr><th><h4>Range: &emsp;</th><th><h4><center>Foreward</th><th><center><h4>Rewind</th></tr>
 		 </thead>
       	 <tbody><h4>

@@ -460,11 +460,7 @@ void updateCounters() {
         json += "\"mS2\": \"" + String(cntS[1]) + "\",";
         json += "\"mE2\": \"" + String(cntE[1]) + "\",";
         json += "\"mS3\": \"" + String(cntS[2]) + "\",";
-        json += "\"mE3\": \"" + String(cntE[2]) + "\",";
-        json += "\"mS4\": \"" + String(cntS[3]) + "\",";
-        json += "\"mE4\": \"" + String(cntE[3]) + "\",";
-        json += "\"mS5\": \"" + String(cntS[4]) + "\",";
-        json += "\"mE5\": \"" + String(cntE[4]) + "\"}";
+        json += "\"mE3\": \"" + String(cntE[2]) + "\"}";
 /*
   Serial.print("Counters: ");
   Serial.println(json);

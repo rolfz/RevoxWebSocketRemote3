@@ -50,8 +50,8 @@ void gotoPosition(uint8 * index){
                 }
                 else
                 {
-                gotoPos=EEPROM.read(loc+8);
-                gotoPos+=EEPROM.read(loc+9)<<8;
+                gotoPos=EEPROM.read(loc+10);
+                gotoPos+=EEPROM.read(loc+11)<<8;
                 }
 //      Serial.print("gotoPos: ");
 //      Serial.println(gotoPos);
@@ -75,8 +75,8 @@ void playMemory(uint8 * index){
       gotoPos=EEPROM.read(loc);
       gotoPos+=EEPROM.read(loc+1)<<8;
 
-      endPos=EEPROM.read(loc+8);
-      endPos+=EEPROM.read(loc+9)<<8;
+      endPos=EEPROM.read(loc+10);
+      endPos+=EEPROM.read(loc+11)<<8;
 
      toPlay = true;
      task=GOTO;
@@ -85,7 +85,7 @@ void playMemory(uint8 * index){
 void autoPlay(int state){
   static int corr;
   static int dif;
-//   if(state != END)Serial.println(stateTxt[state]);
+
    switch(state){
 
    case GOTO:
@@ -93,26 +93,13 @@ void autoPlay(int state){
         // we end in forward
         //dif=gotoPos-mainCnt;
         corr=speedCorr(gotoPos-mainCnt,forTab );
-        /*
-        if(dif<50)corr=forTab[0];
-        else if(dif<100)corr=forTab[1];
-        else if(dif<200)corr=forTab[2];
-        else if(dif<400)corr=forTab[3];
-        else corr=forTab[4];
-        */
+
          updateValue("status","FORWARD");
          runForward();
          task=WAIT_FORWARD;
       }
       else if(mainCnt>gotoPos){
         // we end in reverse
-        /*dif=mainCnt-gotoPos;
-        if(dif<50)corr=rewTab[0];
-        else if(dif<100)corr=rewTab[1];
-        else if(dif<200)corr=rewTab[2];
-        else if(dif<400)corr=rewTab[3];
-        else corr=rewTab[4];
-        */
          corr=speedCorr(mainCnt-gotoPos,rewTab );
          updateValue("status","REWIND");
          runRewind();
@@ -185,7 +172,6 @@ void autoPlay(int state){
   void stopZero(int16_t cnt){
     if(zeroStop==true && revState==WREWIND){
 
-    //  int16_t stopPos=speedCorr(cnt, rewTab);
       if(mainCnt <=stopPos){
         revState=WSTOP;
         updateValue("status","STOP");
