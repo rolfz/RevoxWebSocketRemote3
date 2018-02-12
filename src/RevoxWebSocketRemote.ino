@@ -22,6 +22,7 @@
 #include "WEB_CODE.h"
 #include "EncoderCode.h"
 #include "autoplay.h"
+#include "Pin_Def.h"
 
 //#include "WifiSettings.h"
 volatile int integerValue=0;
@@ -29,6 +30,7 @@ int const SHUT_DOWN_PIN=14;
 int const SHUT_DOWN_THESHOLD=1;
 volatile int16_t lastMainCnt=0;
 
+// local functions
 void displayCounter(void){
   // update counter on display,
   if(mainCnt!=lastMainCnt){

@@ -16,11 +16,16 @@
 #ifdef MULTI
 ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 #endif
-ESP8266WebServer server = ESP8266WebServer(80);       // create a web server on port 80 -99
+ESP8266WebServer server ( 80 );
+//ESP8266WebServer server = ESP8266WebServer(80);       // create a web server on port 80 -99
+
 WebSocketsServer webSocket = WebSocketsServer(81);    // create a websocket server on port 81
 
 File fsUploadFile;                                    // a File variable to temporarily store the received file
 
+void handleFileList();
+void handleFileDelete();
+void handleFileCreate();
 
 #define SERIAL_DEBUG  Serial
 
@@ -148,11 +153,36 @@ void startMDNS() { // Start the mDNS responder
   Serial.println(".local");
 }
 
-
 void startServer() { // Start a HTTP server with a file read handler and an upload handler
+  
   server.on("/edit.html",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
     server.send(200, "text/plain", "");
   }, handleFileUpload);                       // go to 'handleFileUpload'
+
+  server.on("/edit.htm",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
+    server.send(200, "text/plain", "");
+  }, handleFileUpload);                       // go to 'handleFileUpload'
+  
+
+  //SERVER INIT
+  //list directory
+  server.on("/list", HTTP_GET, handleFileList);
+  //load editor
+  server.on("/edit", HTTP_GET, [](){
+    if(!handleFileRead("/edit.htm")) server.send(404, "text/plain", "FileNotFound");
+  });
+  //create file
+  server.on("/edit", HTTP_PUT, handleFileCreate);
+  //delete file
+  server.on("/edit", HTTP_DELETE, handleFileDelete);
+  //first callback is called after the request has ended with all parsed arguments
+  //second callback handles file uploads at that location
+  server.on("/edit", HTTP_POST, [](){ server.send(200, "text/plain", ""); }, handleFileUpload);
+
+  //called when the url is not defined here
+  //use it to load content from SPIFFS
+  
+// web page json calls
 
   server.on("/update.json", updateCounters);
   server.on("/offset.json", updateOffsets);
@@ -160,10 +190,11 @@ void startServer() { // Start a HTTP server with a file read handler and an uplo
   server.onNotFound(handleNotFound);          // if someone requests any other file or page, go to function 'handleNotFound'
   // and check if the file exists
 
-
+  
   server.serveStatic("/js", SPIFFS, "/js");
   server.serveStatic("/css", SPIFFS, "/css");
   server.serveStatic("/img", SPIFFS, "/img");
+  server.serveStatic("/fonts", SPIFFS, "/fonts");
   server.serveStatic("/", SPIFFS, "/index.html");
 
   server.begin();                             // start the HTTP server
@@ -231,6 +262,64 @@ void handleFileUpload() { // upload a new file to the SPIFFS
     }
   }
 }
+
+
+void handleFileDelete(){
+  if(server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
+  String path = server.arg(0);
+  Serial.println("handleFileDelete: " + path);
+  if(path == "/")
+    return server.send(500, "text/plain", "BAD PATH");
+  if(!SPIFFS.exists(path))
+    return server.send(404, "text/plain", "FileNotFound");
+  SPIFFS.remove(path);
+  server.send(200, "text/plain", "");
+  path = String();
+}
+
+void handleFileCreate(){
+  if(server.args() == 0)
+    return server.send(500, "text/plain", "BAD ARGS");
+  String path = server.arg(0);
+  Serial.println("handleFileCreate: " + path);
+  if(path == "/")
+    return server.send(500, "text/plain", "BAD PATH");
+  if(SPIFFS.exists(path))
+    return server.send(500, "text/plain", "FILE EXISTS");
+  File file = SPIFFS.open(path, "w");
+  if(file)
+    file.close();
+  else
+    return server.send(500, "text/plain", "CREATE FAILED");
+  server.send(200, "text/plain", "");
+  path = String();
+}
+
+void handleFileList() {
+  if(!server.hasArg("dir")) {server.send(500, "text/plain", "BAD ARGS"); return;}
+  
+  String path = server.arg("dir");
+  Serial.println("handleFileList: " + path);
+  Dir dir = SPIFFS.openDir(path);
+  path = String();
+
+  String output = "[";
+  while(dir.next()){
+    File entry = dir.openFile("r");
+    if (output != "[") output += ',';
+    bool isDir = false;
+    output += "{\"type\":\"";
+    output += (isDir)?"dir":"file";
+    output += "\",\"name\":\"";
+    output += String(entry.name()).substring(1);
+    output += "\"}";
+    entry.close();
+  }
+  
+  output += "]";
+  server.send(200, "text/json", output);
+}
+
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length ) { // When a WebSocket message is received
 
@@ -506,12 +595,23 @@ String formatBytes(size_t bytes) { // convert sizes in bytes to KB and MB
   }
 }
 
-String getContentType(String filename) { // determine the filetype of a given filename, based on tohe extension
-  if (filename.endsWith(".html")) return "text/html";
-  else if (filename.endsWith(".css")) return "text/css";
-  else if (filename.endsWith(".js")) return "application/javascript";
-  else if (filename.endsWith(".ico")) return "image/x-icon";
-  else if (filename.endsWith(".gz")) return "application/x-gzip";
+String getContentType(String filename){
+  if(server.hasArg("download")) return "application/octet-stream";
+  else if(filename.endsWith(".htm")) return "text/html";
+  else if(filename.endsWith(".html")) return "text/html";
+  else if(filename.endsWith(".css")) return "text/css";
+  else if(filename.endsWith(".js")) return "application/javascript";
+  else if(filename.endsWith(".png")) return "image/png";
+  else if(filename.endsWith(".gif")) return "image/gif";
+  else if(filename.endsWith(".jpg")) return "image/jpeg";
+  else if(filename.endsWith(".ico")) return "image/x-icon";
+  else if(filename.endsWith(".xml")) return "text/xml";
+  else if(filename.endsWith(".ttf")) return "font/ttf";
+  else if(filename.endsWith(".woff")) return "font/woff";
+  else if(filename.endsWith(".woff2")) return "font/woff2";
+  else if(filename.endsWith(".pdf")) return "application/x-pdf";
+  else if(filename.endsWith(".zip")) return "application/x-zip";
+  else if(filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
 

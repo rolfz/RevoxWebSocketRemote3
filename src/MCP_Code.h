@@ -14,17 +14,8 @@ Version 1.0
 #include <Wire.h>
 #include <Adafruit_MCP23017.h>
 #include <Arduino.h>
+#include "Pin_Def.h"
 
-// constants
-byte const LED1_PIN=D7;
-byte const LED2_PIN=D8;
-
-// ESP pin definitions
-
-byte const I2C_SDA=2; //D4;
-byte const I2C_SCL=0; //D3;
-byte const HALL_SENS= 4; //D2;
-byte const HALL_DIR=  12; //D6;
 
 // Revox output signals on port A
 byte const REV_PA_OUT=0;
@@ -45,6 +36,10 @@ byte const REV_RE_IN=12;
 byte const REV_PA_IN=13; // for testing
 byte const REV_MO_IN=14; // move input (added July 1st 2017 to aviond delay in code)
 //byte const REV_SENS_IN=15;
+
+// Interrupts from the MCP will be handled by this PIN
+
+
 
 #define RecordPin 8
 #define StopPin 9

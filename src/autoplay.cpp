@@ -36,7 +36,7 @@ int16_t speedCorr(int16_t dif,int16_t tab[] ){
     else if(dif<200)corr=tab[2];
     else if(dif<400)corr=tab[3];
     else if(dif<800)corr=tab[4];
-    else corr=tab[5];
+    else corr=tab[5]; // distance >800 turns
     return corr;
 }
 

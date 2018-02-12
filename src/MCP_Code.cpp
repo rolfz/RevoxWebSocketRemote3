@@ -17,8 +17,7 @@ Version 1.0
 
 Adafruit_MCP23017 mcp;
 
-// Interrupts from the MCP will be handled by this PIN
-byte mcpIntBPin=5; //D1;
+#define DEBUG
 
 // ... and this interrupt vector
 byte interruptVector=1;

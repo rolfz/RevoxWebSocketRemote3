@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "MCP_Code.h"
-
+#include "Pin_Def.h"
 // prototypes
 void doEncoderB(void);
 void doEncoderA(void);

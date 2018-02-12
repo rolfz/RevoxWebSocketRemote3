@@ -4,3 +4,5 @@
 .gcc-flags.json
 /*.zip
 /RevoxWebSocketRemote3
+.vscode/c_cpp_properties.json
+.vscode/launch.json
