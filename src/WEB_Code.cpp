@@ -201,125 +201,7 @@ void startServer() { // Start a HTTP server with a file read handler and an uplo
   Serial.println("HTTP server started.");
 }
 
-/*__________________________________________________________SERVER_HANDLERS__________________________________________________________*/
-
-void handleNotFound() { // if the requested file or page doesn't exist, return a 404 not found error
-  if (!handleFileRead(server.uri())) {        // check if the file exists in the flash memory (SPIFFS), if so, send it
-    server.send(404, "text/plain", "404: File Not Found");
-  }
-}
-
-bool handleFileRead(String path) { // send the right file to the client (if it exists)
-  #ifdef DEBUG
-  Serial.println("handleFileRead: " + path);
-  #endif
-  if (path.endsWith("/")) path += "index.html";          // If a folder is requested, send the index file
-  String contentType = getContentType(path);             // Get the MIME type
-  String pathWithGz = path + ".gz";
-  if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) { // If the file exists, either as a compressed archive, or normal
-    if (SPIFFS.exists(pathWithGz))                         // If there's a compressed version available
-      path += ".gz";                                         // Use the compressed verion
-    File file = SPIFFS.open(path, "r");                    // Open the file
-    size_t sent = server.streamFile(file, contentType);    // Send it to the client
-    file.close();                                          // Close the file again
-    #ifdef DEBUG
-    Serial.println(String("\tSent file: ") + path);
-    #endif
-    return true;
-  }
-  #ifdef DEBUG
-  // this line makes problems sending error on UART
-  Serial.println(String("\tFile Not Found: ") + path);   // If the file doesn't exist, return false
-  #endif
-  return false;
-}
-
-void handleFileUpload() { // upload a new file to the SPIFFS
-  HTTPUpload& upload = server.upload();
-  String path;
-  if (upload.status == UPLOAD_FILE_START) {
-    path = upload.filename;
-    if (!path.startsWith("/")) path = "/" + path;
-    if (!path.endsWith(".gz")) {                         // The file server always prefers a compressed version of a file
-      String pathWithGz = path + ".gz";                  // So if an uploaded file is not compressed, the existing compressed
-      if (SPIFFS.exists(pathWithGz))                     // version of that file must be deleted (if it exists)
-        SPIFFS.remove(pathWithGz);
-    }
-    Serial.print("handleFileUpload Name: "); Serial.println(path);
-    fsUploadFile = SPIFFS.open(path, "w");            // Open the file for writing in SPIFFS (create if it doesn't exist)
-    path = String();
-  } else if (upload.status == UPLOAD_FILE_WRITE) {
-    if (fsUploadFile)
-      fsUploadFile.write(upload.buf, upload.currentSize); // Write the received bytes to the file
-  } else if (upload.status == UPLOAD_FILE_END) {
-    if (fsUploadFile) {                                   // If the file was successfully created
-      fsUploadFile.close();                               // Close the file again
-      Serial.print("handleFileUpload Size: "); Serial.println(upload.totalSize);
-      server.sendHeader("Location", "/success.html");     // Redirect the client to the success page
-      server.send(303);
-    } else {
-      server.send(500, "text/plain", "500: couldn't create file");
-    }
-  }
-}
-
-
-void handleFileDelete(){
-  if(server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
-  String path = server.arg(0);
-  Serial.println("handleFileDelete: " + path);
-  if(path == "/")
-    return server.send(500, "text/plain", "BAD PATH");
-  if(!SPIFFS.exists(path))
-    return server.send(404, "text/plain", "FileNotFound");
-  SPIFFS.remove(path);
-  server.send(200, "text/plain", "");
-  path = String();
-}
-
-void handleFileCreate(){
-  if(server.args() == 0)
-    return server.send(500, "text/plain", "BAD ARGS");
-  String path = server.arg(0);
-  Serial.println("handleFileCreate: " + path);
-  if(path == "/")
-    return server.send(500, "text/plain", "BAD PATH");
-  if(SPIFFS.exists(path))
-    return server.send(500, "text/plain", "FILE EXISTS");
-  File file = SPIFFS.open(path, "w");
-  if(file)
-    file.close();
-  else
-    return server.send(500, "text/plain", "CREATE FAILED");
-  server.send(200, "text/plain", "");
-  path = String();
-}
-
-void handleFileList() {
-  if(!server.hasArg("dir")) {server.send(500, "text/plain", "BAD ARGS"); return;}
-  
-  String path = server.arg("dir");
-  Serial.println("handleFileList: " + path);
-  Dir dir = SPIFFS.openDir(path);
-  path = String();
-
-  String output = "[";
-  while(dir.next()){
-    File entry = dir.openFile("r");
-    if (output != "[") output += ',';
-    bool isDir = false;
-    output += "{\"type\":\"";
-    output += (isDir)?"dir":"file";
-    output += "\",\"name\":\"";
-    output += String(entry.name()).substring(1);
-    output += "\"}";
-    entry.close();
-  }
-  
-  output += "]";
-  server.send(200, "text/json", output);
-}
-
+//---------------------- WEB SOCKET CODE ----------------------------------------------------------
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length ) { // When a WebSocket message is received
 
@@ -606,13 +488,131 @@ String getContentType(String filename){
   else if(filename.endsWith(".jpg")) return "image/jpeg";
   else if(filename.endsWith(".ico")) return "image/x-icon";
   else if(filename.endsWith(".xml")) return "text/xml";
-  else if(filename.endsWith(".ttf")) return "font/ttf";
-  else if(filename.endsWith(".woff")) return "font/woff";
-  else if(filename.endsWith(".woff2")) return "font/woff2";
   else if(filename.endsWith(".pdf")) return "application/x-pdf";
   else if(filename.endsWith(".zip")) return "application/x-zip";
   else if(filename.endsWith(".gz")) return "application/x-gzip";
   return "text/plain";
 }
+
+/*__________________________________________________________SERVER_HANDLERS__________________________________________________________*/
+
+#define DEBUG
+
+bool handleFileRead(String path) { // send the right file to the client (if it exists)
+  #ifdef DEBUG
+  Serial.println("handleFileRead: " + path);
+  #endif
+  if (path.endsWith("/")) path += "index.html";          // If a folder is requested, send the index file
+  String contentType = getContentType(path);             // Get the MIME type
+  String pathWithGz = path + ".gz";
+  if (SPIFFS.exists(pathWithGz) || SPIFFS.exists(path)) { // If the file exists, either as a compressed archive, or normal
+    if (SPIFFS.exists(pathWithGz))                         // If there's a compressed version available
+      path += ".gz";                                         // Use the compressed verion
+    File file = SPIFFS.open(path, "r");                    // Open the file
+    size_t sent = server.streamFile(file, contentType);    // Send it to the client
+    file.close();                                          // Close the file again
+    #ifdef DEBUG
+    Serial.println(String("\tSent file: ") + path);
+    #endif
+    return true;
+  }
+  #ifdef DEBUG
+  // this line makes problems sending error on UART
+  Serial.println(String("\tFile Not Found: ") + path);   // If the file doesn't exist, return false
+  #endif
+  return false;
+}
+
+void handleFileUpload() { // upload a new file to the SPIFFS
+  HTTPUpload& upload = server.upload();
+  String path;
+  if (upload.status == UPLOAD_FILE_START) {
+    path = upload.filename;
+    if (!path.startsWith("/")) path = "/" + path;
+    if (!path.endsWith(".gz")) {                         // The file server always prefers a compressed version of a file
+      String pathWithGz = path + ".gz";                  // So if an uploaded file is not compressed, the existing compressed
+      if (SPIFFS.exists(pathWithGz))                     // version of that file must be deleted (if it exists)
+        SPIFFS.remove(pathWithGz);
+    }
+    Serial.print("handleFileUpload Name: "); Serial.println(path);
+    fsUploadFile = SPIFFS.open(path, "w");            // Open the file for writing in SPIFFS (create if it doesn't exist)
+    path = String();
+  } else if (upload.status == UPLOAD_FILE_WRITE) {
+    if (fsUploadFile)
+      fsUploadFile.write(upload.buf, upload.currentSize); // Write the received bytes to the file
+  } else if (upload.status == UPLOAD_FILE_END) {
+    if (fsUploadFile) {                                   // If the file was successfully created
+      fsUploadFile.close();                               // Close the file again
+      Serial.print("handleFileUpload Size: "); Serial.println(upload.totalSize);
+      server.sendHeader("Location", "/success.html");     // Redirect the client to the success page
+      server.send(303);
+    } else {
+      server.send(500, "text/plain", "500: couldn't create file");
+    }
+  }
+}
+
+
+void handleFileDelete(){
+  if(server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
+  String path = server.arg(0);
+  Serial.println("handleFileDelete: " + path);
+  if(path == "/")
+    return server.send(500, "text/plain", "BAD PATH");
+  if(!SPIFFS.exists(path))
+    return server.send(404, "text/plain", "FileNotFound");
+  SPIFFS.remove(path);
+  server.send(200, "text/plain", "");
+  path = String();
+}
+
+void handleFileCreate(){
+  if(server.args() == 0)
+    return server.send(500, "text/plain", "BAD ARGS");
+  String path = server.arg(0);
+  Serial.println("handleFileCreate: " + path);
+  if(path == "/")
+    return server.send(500, "text/plain", "BAD PATH");
+  if(SPIFFS.exists(path))
+    return server.send(500, "text/plain", "FILE EXISTS");
+  File file = SPIFFS.open(path, "w");
+  if(file)
+    file.close();
+  else
+    return server.send(500, "text/plain", "CREATE FAILED");
+  server.send(200, "text/plain", "");
+  path = String();
+}
+
+void handleFileList() {
+  if(!server.hasArg("dir")) {server.send(500, "text/plain", "BAD ARGS"); return;}
+  
+  String path = server.arg("dir");
+  Serial.println("handleFileList: " + path);
+  Dir dir = SPIFFS.openDir(path);
+  path = String();
+
+  String output = "[";
+  while(dir.next()){
+    File entry = dir.openFile("r");
+    if (output != "[") output += ',';
+    bool isDir = false;
+    output += "{\"type\":\"";
+    output += (isDir)?"dir":"file";
+    output += "\",\"name\":\"";
+    output += String(entry.name()).substring(1);
+    output += "\"}";
+    entry.close();
+  }
+  
+  output += "]";
+  server.send(200, "text/json", output);
+}
+void handleNotFound() { // if the requested file or page doesn't exist, return a 404 not found error
+  if (!handleFileRead(server.uri())) {        // check if the file exists in the flash memory (SPIFFS), if so, send it
+    server.send(404, "text/plain", "404: File Not Found");
+  }
+}
+// end of file handle code
 
 // end of code
