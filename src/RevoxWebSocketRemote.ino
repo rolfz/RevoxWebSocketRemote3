@@ -50,8 +50,8 @@ void setup() {
   delay(10);
 
   Serial.println("\r\n");
-
-  Serial.println("Revox Wifi Remote V1.0 18.2.2018");
+//hello this is a test
+  Serial.println("Revox Wifi Remote V1.1 18.2.2018");
 //  Serial.println(__FILE__);
   Serial.println("Compiled: " __DATE__ " " __TIME__);
   Serial.println("File:     RevoxWebSocketRemote.ino\n");
