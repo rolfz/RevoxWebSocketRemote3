@@ -29,7 +29,7 @@ Developpment hardware with test connection and switches.
 
 The web interface is bootstrap based, will be reviewed for the final version
 ![WEB interface](wifi-main.JPG)
-![WEB interface](Wifi-edit.jpg)
+![WEB interface](Wifi-edit.JPG)
 
 ## Contributors
 
