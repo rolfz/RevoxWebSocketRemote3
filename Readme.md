@@ -14,6 +14,8 @@ This display will be similar to arduino mini (layout) including 4 7-segment led 
 
 PROJECT is under developpment !!! June-July 2017
 
+Copyright 2017-2018-20192020-r.ziegler
+
 ## Code Example
 
 The code on Git is not yet fully functionnal. It has been uploaded for backup purpose only
