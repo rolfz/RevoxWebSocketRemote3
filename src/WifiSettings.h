@@ -2,8 +2,8 @@
 #define __NETWORK__
 
 // changes this lines if you want to connect to your local network
-  const char* myssid     = "BELLAVISTA";
-  const char* mypassword = "ABCDEF128854";
+  const char* myssid     = "BELLAVISTA1";
+  const char* mypassword = "ABCDEFG2020";
 
   const char* ssid2     = "myssid2";
   const char* password2 = "mypassword2";
